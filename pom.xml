@@ -1,0 +1,24 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>com.revconnect</groupId>
+ <artifactId>RevConnect</artifactId>
+ <version>1.0</version>
+ <properties>
+  <maven.compiler.source>1.7</maven.compiler.source>
+  <maven.compiler.target>1.7</maven.compiler.target>
+ </properties>
+ <dependencies>
+  <dependency>
+   <groupId>junit</groupId>
+   <artifactId>junit</artifactId>
+   <version>4.12</version>
+   <scope>test</scope>
+  </dependency>
+  <dependency>
+   <groupId>com.oracle</groupId>
+   <artifactId>ojdbc6</artifactId>
+   <version>11.2.0.4</version>
+  </dependency>
+ </dependencies>
+</project>

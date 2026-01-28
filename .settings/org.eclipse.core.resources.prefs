@@ -1,0 +1,8 @@
+#Wed Jan 28 23:36:13 IST 2026
+eclipse.preferences.version=1
+encoding//src/main/java/com/revconnect/cli/RevConnectApp.java=UTF-8
+encoding//src/main/java/com/revconnect/dao/FeedDaoImpl.java=UTF-8
+encoding//src/main/java/com/revconnect/dao/UserDaoImpl.java=UTF-8
+encoding//src/main/java/com/revconnect/service/AuthService.java=UTF-8
+encoding//src/main/java/com/revconnect/service/FeedService.java=UTF-8
+encoding//src/test/java/com/revconnect/dao/UserDaoTest.java=UTF-8
