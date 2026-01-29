@@ -10,14 +10,12 @@ public class ProfileService {
 
     private ProfileDaoImpl dao = new ProfileDaoImpl();
 
-    // Create or update profile based on user type
     public boolean createOrEditProfile(int userId, UserType userType, Scanner sc) {
 
         try {
             Profile p = new Profile();
             p.setUserId(userId);
 
-            // ================= PERSONAL USER =================
             if (userType == UserType.PERSONAL) {
 
                 System.out.print("Name: ");
@@ -37,7 +35,6 @@ public class ProfileService {
                 p.setWebsite(sc.nextLine());
             }
 
-            // ================= BUSINESS USER =================
             else if (userType == UserType.BUSINESS) {
 
                 System.out.print("Business Name: ");
@@ -62,7 +59,6 @@ public class ProfileService {
                 p.setProfilePic(sc.nextLine());
 
 
-                // Java 8 compatible validation
                 if (p.getCategory() == null || p.getCategory().trim().isEmpty()
                         || p.getBusinessAddress() == null || p.getBusinessAddress().trim().isEmpty()) {
 
@@ -71,7 +67,6 @@ public class ProfileService {
                 }
             }
 
-            // ================= CREATOR USER =================
             else if (userType == UserType.CREATOR) {
 
                 System.out.print("Creator Name: ");

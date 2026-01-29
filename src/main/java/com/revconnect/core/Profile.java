@@ -2,23 +2,18 @@ package com.revconnect.core;
 
 public class Profile {
 
-    private int profileId;   // optional but recommended
+    private int profileId;   
     private int userId;
-
-    // Common profile fields
     private String name;
     private String bio;
     private String location;
     private String website;
     private String profilePic;
-
-    // Creator / Business specific fields
     private String category;
     private String businessAddress;
     private String contactInfo;
 
-    // Getters & Setters
-    public int getProfileId() {
+        public int getProfileId() {
         return profileId;
     }
 

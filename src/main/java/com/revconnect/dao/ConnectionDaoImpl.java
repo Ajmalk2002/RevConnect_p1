@@ -10,7 +10,6 @@ import com.revconnect.config.DBConnection;
 
 public class ConnectionDaoImpl implements ConnectionDao {
 
-    // ================= SEND REQUEST =================
     @Override
     public boolean sendRequest(int fromUser, int toUser) {
 
@@ -23,7 +22,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
         try {
             con = DBConnection.getConnection();
 
-            // Reverse request → auto accept
             ps = con.prepareStatement(
                 "SELECT status FROM connections WHERE requester_id=? AND receiver_id=?");
             ps.setInt(1, toUser);
@@ -46,7 +44,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
             rs.close();
             ps.close();
 
-            // Already sent?
             ps = con.prepareStatement(
                 "SELECT 1 FROM connections WHERE requester_id=? AND receiver_id=?");
             ps.setInt(1, fromUser);
@@ -58,7 +55,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
             rs.close();
             ps.close();
 
-            // Insert request
             ps = con.prepareStatement(
                 "INSERT INTO connections (requester_id, receiver_id, status) VALUES (?, ?, 'PENDING')");
             ps.setInt(1, fromUser);
@@ -77,7 +73,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
         }
     }
 
-    // ================= ACCEPT =================
     @Override
     public boolean acceptRequest(int fromUser, int toUser) {
 
@@ -101,7 +96,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
         }
     }
 
-    // ================= REJECT =================
     @Override
     public boolean rejectRequest(int fromUser, int toUser) {
 
@@ -125,7 +119,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
         }
     }
 
-    // ================= REMOVE CONNECTION =================
     @Override
     public boolean removeConnection(int userId, int otherUser) {
 
@@ -152,7 +145,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
         }
     }
 
-    // ================= VIEW PENDING =================
     @Override
     public List<String> getPendingRequests(int userId) {
 
@@ -184,7 +176,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
         return list;
     }
 
-    // ================= GET CONNECTION IDS =================
     @Override
     public List<Integer> getConnections(int userId) {
 
@@ -218,7 +209,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
         return list;
     }
 
-    // ================= VIEW ALL CONNECTIONS =================
     @Override
     public List<String> getAllConnections(int userId) {
 

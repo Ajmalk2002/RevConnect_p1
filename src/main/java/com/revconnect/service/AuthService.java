@@ -42,9 +42,9 @@ public class AuthService {
         User user = new User();
         user.setEmail(email);
         user.setPassword(password);
-        user.setUserType(userType); // ENUM
+        user.setUserType(userType); 
 
-        int result = dao.register(user); // ✅ FIXED
+        int result = dao.register(user); 
 
         return result == 1 ? user : null;
     }

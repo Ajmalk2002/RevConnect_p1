@@ -11,7 +11,6 @@ import com.revconnect.core.Post;
 
 public class FeedDaoImpl implements FeedDao {
 
-    // ================= 1. Personalized Feed =================
     public List<Post> getPersonalizedFeed(int userId) {
 
         List<Post> list = new ArrayList<Post>();
@@ -68,7 +67,6 @@ public class FeedDaoImpl implements FeedDao {
         return list;
     }
 
-    // ================= 2. Trending Posts =================
     public List<Post> getTrendingPosts() {
 
         List<Post> list = new ArrayList<Post>();
@@ -76,7 +74,6 @@ public class FeedDaoImpl implements FeedDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        // ✅ Oracle-safe trending query
         String sql =
             "SELECT p.post_id, p.user_id, p.content, p.hashtags " +
             "FROM posts p " +
@@ -112,7 +109,6 @@ public class FeedDaoImpl implements FeedDao {
         return list;
     }
 
-    // ================= 3. Search by Hashtag =================
     public List<Post> searchByHashtag(String hashtag) {
 
         List<Post> list = new ArrayList<Post>();
@@ -150,7 +146,6 @@ public class FeedDaoImpl implements FeedDao {
         return list;
     }
 
-    // ================= 4. Filter Feed by User Type =================
     public List<Post> filterFeed(int userId, String userType) {
 
         List<Post> list = new ArrayList<Post>();

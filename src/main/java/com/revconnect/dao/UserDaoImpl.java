@@ -8,7 +8,6 @@ import com.revconnect.util.PasswordUtil;
 
 public class UserDaoImpl implements UserDao {
 
-    // ================= REGISTER =================
     public int register(User u) {
 
         Connection con = null;
@@ -19,19 +18,16 @@ public class UserDaoImpl implements UserDao {
         try {
             con = DBConnection.getConnection();
 
-            // 🔐 HASH PASSWORD BEFORE STORE
             String hashedPassword =
                 PasswordUtil.hashPassword(u.getPassword());
 
-            // Call stored procedure
             cs = con.prepareCall("{ call sp_register_user(?, ?, ?) }");
             cs.setString(1, u.getEmail());
             cs.setString(2, hashedPassword);
-            cs.setString(3, u.getUserType().name()); // ENUM → STRING
+            cs.setString(3, u.getUserType().name()); 
             cs.execute();
             cs.close();
 
-            // 🔑 FETCH GENERATED USER_ID
             ps = con.prepareStatement(
                 "SELECT user_id FROM users WHERE email=?"
             );
@@ -55,7 +51,6 @@ public class UserDaoImpl implements UserDao {
         return 0;
     }
 
-    // ================= LOGIN =================
     public User login(String email, String password) {
 
         Connection con = null;
@@ -101,7 +96,6 @@ public class UserDaoImpl implements UserDao {
         return null;
     }
 
-    // ================= SEARCH USERS =================
     public void searchUsers(String key) {
 
         Connection con = null;
@@ -150,7 +144,6 @@ public class UserDaoImpl implements UserDao {
         try {
             con = DBConnection.getConnection();
 
-            // 1️⃣ Get existing hashed password
             ps = con.prepareStatement(
                 "SELECT password FROM users WHERE user_id=?");
             ps.setInt(1, userId);
@@ -160,17 +153,15 @@ public class UserDaoImpl implements UserDao {
 
             String dbHash = rs.getString("password");
 
-            // 2️⃣ Hash old password & compare
             String oldHash = PasswordUtil.hashPassword(oldPassword);
 
             if (!oldHash.equals(dbHash)) {
-                return false; // wrong old password
+                return false; 
             }
 
             rs.close();
             ps.close();
 
-            // 3️⃣ Update new password (hashed)
             ps = con.prepareStatement(
                 "UPDATE users SET password=? WHERE user_id=?");
             ps.setString(1,

@@ -10,7 +10,6 @@ import com.revconnect.core.Profile;
 
 public class ProfileDaoImpl implements ProfileDao {
 
-    // Uses stored procedure: SP_SAVE_PROFILE
 	@Override
 	public void saveOrUpdate(Profile p) {
 
@@ -43,7 +42,6 @@ public class ProfileDaoImpl implements ProfileDao {
 	}
 
 
-    // View profile from PROFILES table
 	@Override
 	public void viewProfile(int userId) {
 

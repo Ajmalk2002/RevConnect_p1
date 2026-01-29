@@ -7,11 +7,9 @@ import com.revconnect.config.DBConnection;
 
 public class FollowDaoImpl implements FollowDao {
 
-    // ================= FOLLOW =================
     @Override
     public boolean follow(int followerId, int followeeId) {
 
-        // ❌ NEGATIVE: follow self
         if (followerId == followeeId) {
             return false;
         }
@@ -23,7 +21,6 @@ public class FollowDaoImpl implements FollowDao {
         try {
             c = DBConnection.getConnection();
 
-            // Check already following
             ps = c.prepareStatement(
                 "SELECT 1 FROM followers WHERE follower_id=? AND followee_id=?");
             ps.setInt(1, followerId);
@@ -31,7 +28,7 @@ public class FollowDaoImpl implements FollowDao {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                return false; // already following
+                return false; 
             }
 
             rs.close();
@@ -54,7 +51,6 @@ public class FollowDaoImpl implements FollowDao {
         }
     }
 
-    // ================= UNFOLLOW =================
     @Override
     public boolean unfollow(int followerId, int followeeId) {
 
@@ -78,21 +74,18 @@ public class FollowDaoImpl implements FollowDao {
         }
     }
 
-    // ================= GET FOLLOWERS =================
     @Override
     public List<Integer> getFollowers(int userId) {
         return fetchList(
             "SELECT follower_id FROM followers WHERE followee_id=?", userId);
     }
 
-    // ================= GET FOLLOWING =================
     @Override
     public List<Integer> getFollowing(int userId) {
         return fetchList(
             "SELECT followee_id FROM followers WHERE follower_id=?", userId);
     }
 
-    // ================= COMMON FETCH =================
     private List<Integer> fetchList(String sql, int id) {
 
         List<Integer> list = new ArrayList<Integer>();

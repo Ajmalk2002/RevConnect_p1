@@ -122,7 +122,6 @@ public class PostDaoImpl implements PostDao {
         }
     }
 
-    // ✅ REQUIRED FOR NOTIFICATIONS
     public int getPostOwner(int postId) {
 
         Connection con = null;

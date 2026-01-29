@@ -16,6 +16,5 @@ public interface ConnectionDao {
 
     List<Integer> getConnections(int userId);
 
-    // ✅ UI helper – MUST be declared if used
     List<String> getAllConnections(int userId);
 }

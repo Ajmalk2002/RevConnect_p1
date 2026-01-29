@@ -25,13 +25,12 @@ public class LikeDaoImpl implements LikeDao {
             ps.setInt(2, userId);
 
             ps.executeUpdate();
-            return true; // ✅ like successful
+            return true; 
 
         } catch (SQLException e) {
 
-            // ORA-00001 → UNIQUE constraint violated (already liked)
             if (e.getErrorCode() == 1) {
-                return false; // ❌ duplicate like
+                return false; 
             }
 
             throw new RuntimeException("Error while liking post", e);
@@ -58,7 +57,7 @@ public class LikeDaoImpl implements LikeDao {
             ps.setInt(2, userId);
 
             int rows = ps.executeUpdate();
-            return rows > 0; // ✅ true if something deleted
+            return rows > 0; 
 
         } catch (Exception e) {
             throw new RuntimeException("Error while unliking post", e);

@@ -9,7 +9,6 @@ public class FeedService {
 
     private FeedDao dao = new FeedDaoImpl();
 
-    // 1️⃣ View Personalized Feed
     public void viewFeed(int userId) {
 
         List<Post> posts = dao.getPersonalizedFeed(userId);
@@ -26,7 +25,6 @@ public class FeedService {
         }
     }
 
-    // 2️⃣ View Trending Posts
     public void viewTrending() {
 
         List<Post> posts = dao.getTrendingPosts();
@@ -43,7 +41,6 @@ public class FeedService {
         }
     }
 
-    // 3️⃣ Search Posts by Hashtag
     public void searchHashtag(String tag) {
 
         List<Post> posts = dao.searchByHashtag(tag);
@@ -60,7 +57,6 @@ public class FeedService {
         }
     }
 
-    // 4️⃣ Filter Feed by User Type
     public void filterByUserType(int userId, String type) {
 
         List<Post> posts = dao.filterFeed(userId, type);

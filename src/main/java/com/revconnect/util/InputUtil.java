@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class InputUtil {
 
     private InputUtil() {
+
     }
 
     public static int readInt(Scanner sc) {
