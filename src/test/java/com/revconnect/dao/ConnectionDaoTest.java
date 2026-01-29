@@ -6,7 +6,6 @@ import org.junit.Test;
 
 public class ConnectionDaoTest {
 
-    // ✅ POSITIVE FLOW
     @Test
     public void testConnectionFlow() {
 
@@ -22,7 +21,6 @@ public class ConnectionDaoTest {
         assertTrue(removed);
     }
 
-    // ❌ NEGATIVE: Send request to self
     @Test
     public void testSendRequestToSelf() {
 

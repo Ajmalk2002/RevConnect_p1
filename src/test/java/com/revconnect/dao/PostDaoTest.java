@@ -8,7 +8,6 @@ import com.revconnect.core.Post;
 
 public class PostDaoTest {
 
-    // ✅ POSITIVE: Create post
     @Test
     public void testCreatePost() {
 
@@ -24,7 +23,6 @@ public class PostDaoTest {
         assertTrue(true);
     }
 
-    // ❌ NEGATIVE: Invalid user
     @Test
     public void testCreatePostInvalidUser() {
 
@@ -36,10 +34,9 @@ public class PostDaoTest {
 
         dao.createPost(p);
 
-        assertTrue(true); // DB constraint handles failure
+        assertTrue(true); 
     }
 
-    // ✅ POSITIVE: Get posts
     @Test
     public void testGetMyPosts() {
 

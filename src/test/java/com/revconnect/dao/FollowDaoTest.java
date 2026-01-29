@@ -6,7 +6,6 @@ import org.junit.Test;
 
 public class FollowDaoTest {
 
-    // ✅ POSITIVE
     @Test
     public void testFollowUnfollow() {
 
@@ -16,7 +15,6 @@ public class FollowDaoTest {
         assertTrue(dao.unfollow(1, 2));
     }
 
-    // ❌ NEGATIVE: Follow self
     @Test
     public void testFollowSelf() {
 

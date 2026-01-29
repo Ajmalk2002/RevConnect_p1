@@ -7,7 +7,6 @@ import com.revconnect.core.Comment;
 
 public class CommentDaoTest {
 
-    // ✅ POSITIVE: Add comment
     @Test
     public void testAddComment() {
 
@@ -23,7 +22,6 @@ public class CommentDaoTest {
         assertTrue(true);
     }
 
-    // ❌ NEGATIVE: Invalid post
     @Test
     public void testAddCommentInvalidPost() {
 

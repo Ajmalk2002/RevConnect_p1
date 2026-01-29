@@ -9,7 +9,6 @@ import com.revconnect.core.UserType;
 
 public class UserDaoTest {
 
-    // ✅ POSITIVE: Valid registration
     @Test
     public void testRegisterSuccess() {
 
@@ -25,7 +24,6 @@ public class UserDaoTest {
         assertEquals(1, result);
     }
 
-    // ❌ NEGATIVE: Invalid email
     @Test
     public void testRegisterInvalidEmail() {
 
@@ -41,8 +39,7 @@ public class UserDaoTest {
         assertEquals(0, result);
     }
 
-    // ❌ NEGATIVE: Duplicate email
-    @Test
+        @Test
     public void testRegisterDuplicateEmail() {
 
         UserDao dao = new UserDaoImpl();

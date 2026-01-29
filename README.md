@@ -1,27 +1,65 @@
 
 RevConnect - Console Based Social Media Application 
+📌 Project Overview
 
-Features:
-- Register & Login (menu driven)
-- Create/Edit Profile
-- View Profile
-- Search Users by name/email
-- Oracle 10g + JDBC
-- JUnit 4
-- Eclipse Indigo compatible
+RevConnect is a console-based social networking application developed using Java 7, JDBC, and Oracle 10g.
+It simulates core features of a modern social media platform such as:
+
+User registration & login
+
+Profile management
+
+Posting content
+
+Likes, comments, shares
+
+Connection (network) management
+
+Personalized feed & discovery
+
+Notification system
+
+Logging using Log4j
+
+The application follows a layered architecture with proper separation of concerns.
+
+Technologies Used
+
+| Technology   | Version             |
+| ------------ | ------------------- |
+| Java         | Java SE 7           |
+| IDE          | Eclipse Indigo      |
+| Database     | Oracle 10g          |
+| JDBC         | Oracle JDBC Driver  |
+| Logging      | Log4j 1.2.17        |
+| Testing      | JUnit 4             |
+| Architecture | DAO + Service + CLI |
+
 
 Architecture:
 CLI -> Service -> DAO -> Oracle 
 
 
-3. User Types Supported
+How to Run the Project
 
-The system supports role-based access control using the following user types:
+Open Eclipse Indigo
 
-PERSONAL
+Import project as Existing Java Project
 
-CREATOR
+Add required JARs:
 
-BUSINESS
+ojdbc14.jar
 
-Each user type has different access privileges within the system.
+log4j-1.2.17.jar
+
+junit-4.x.jar
+
+Ensure:
+
+Oracle DB is running
+
+log4j.properties is in classpath
+
+Run:
+
+com.revconnect.cli.RevConnectApp

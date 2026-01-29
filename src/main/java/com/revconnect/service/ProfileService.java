@@ -26,9 +26,6 @@ public class ProfileService {
                 System.out.print("Bio: ");
                 p.setBio(sc.nextLine());
 
-                System.out.print("Profile Picture Path: ");
-                p.setProfilePic(sc.nextLine());
-
                 System.out.print("Location: ");
                 p.setLocation(sc.nextLine());
 
@@ -57,9 +54,6 @@ public class ProfileService {
                 System.out.print("Business Website: ");
                 p.setWebsite(sc.nextLine());
 
-                System.out.print("Profile Picture Path: ");
-                p.setProfilePic(sc.nextLine());
-
                 // Java 8 compatible validation
                 if (p.getCategory() == null || p.getCategory().trim().isEmpty()
                         || p.getBusinessAddress() == null || p.getBusinessAddress().trim().isEmpty()) {
@@ -84,8 +78,7 @@ public class ProfileService {
                 System.out.print("Website / Social Link: ");
                 p.setWebsite(sc.nextLine());
 
-                System.out.print("Profile Picture Path: ");
-                p.setProfilePic(sc.nextLine());
+               
             }
 
             dao.saveOrUpdate(p);

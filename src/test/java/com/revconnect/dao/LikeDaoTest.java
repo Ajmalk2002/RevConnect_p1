@@ -18,27 +18,23 @@ public class LikeDaoTest {
         dao.unlikePost(USER_ID, POST_ID);
     }
 
-    // ✅ POSITIVE
     @Test
     public void testLikePost() {
         assertTrue(dao.likePost(USER_ID, POST_ID));
     }
 
-    // ❌ NEGATIVE: Duplicate like
     @Test
     public void testDuplicateLike() {
         dao.likePost(USER_ID, POST_ID);
         assertFalse(dao.likePost(USER_ID, POST_ID));
     }
 
-    // ✅ POSITIVE: Unlike
     @Test
     public void testUnlike() {
         dao.likePost(USER_ID, POST_ID);
         assertTrue(dao.unlikePost(USER_ID, POST_ID));
     }
 
-    // ❌ NEGATIVE: Unlike when not liked
     @Test
     public void testUnlikeWithoutLike() {
         assertFalse(dao.unlikePost(USER_ID, POST_ID));

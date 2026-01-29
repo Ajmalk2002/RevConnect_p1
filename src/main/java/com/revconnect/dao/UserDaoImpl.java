@@ -139,4 +139,81 @@ public class UserDaoImpl implements UserDao {
             try { if (con != null) con.close(); } catch (Exception e) {}
         }
     }
+    
+    @Override
+    public boolean changePassword(int userId, String oldPassword, String newPassword) {
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = DBConnection.getConnection();
+
+            // 1️⃣ Get existing hashed password
+            ps = con.prepareStatement(
+                "SELECT password FROM users WHERE user_id=?");
+            ps.setInt(1, userId);
+            rs = ps.executeQuery();
+
+            if (!rs.next()) return false;
+
+            String dbHash = rs.getString("password");
+
+            // 2️⃣ Hash old password & compare
+            String oldHash = PasswordUtil.hashPassword(oldPassword);
+
+            if (!oldHash.equals(dbHash)) {
+                return false; // wrong old password
+            }
+
+            rs.close();
+            ps.close();
+
+            // 3️⃣ Update new password (hashed)
+            ps = con.prepareStatement(
+                "UPDATE users SET password=? WHERE user_id=?");
+            ps.setString(1,
+                PasswordUtil.hashPassword(newPassword));
+            ps.setInt(2, userId);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
+        }
+    }
+
+
+    @Override
+    public boolean resetPasswordByEmail(String email, String newPassword) {
+
+        Connection con = null;
+        PreparedStatement ps = null;
+
+        try {
+            con = DBConnection.getConnection();
+
+            ps = con.prepareStatement(
+                "UPDATE users SET password=? WHERE email=?");
+            ps.setString(1,
+                PasswordUtil.hashPassword(newPassword));
+            ps.setString(2, email);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
+        }
+    }
+
 }

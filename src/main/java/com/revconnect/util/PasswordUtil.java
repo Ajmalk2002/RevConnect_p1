@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 
 public class PasswordUtil {
 
-    // SHA-256 hashing (Oracle 10g friendly)
     public static String hashPassword(String password) {
 
         try {
@@ -12,13 +11,13 @@ public class PasswordUtil {
             byte[] bytes = md.digest(password.getBytes("UTF-8"));
 
             StringBuilder sb = new StringBuilder();
-            for (byte b : bytes) {
-                sb.append(String.format("%02x", b));
+            for (int i = 0; i < bytes.length; i++) {
+                sb.append(String.format("%02x", bytes[i]));
             }
             return sb.toString();
 
         } catch (Exception e) {
-            throw new RuntimeException("Error hashing password", e);
+            throw new RuntimeException(e);
         }
     }
 }
