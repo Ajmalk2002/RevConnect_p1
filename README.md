@@ -1,5 +1,5 @@
 
-RevConnect - Console Based Social Media Application (Phase 1)
+RevConnect - Console Based Social Media Application 
 
 Features:
 - Register & Login (menu driven)
@@ -11,4 +11,17 @@ Features:
 - Eclipse Indigo compatible
 
 Architecture:
-CLI -> Service -> DAO -> Oracle DB
+CLI -> Service -> DAO -> Oracle 
+
+
+3. User Types Supported
+
+The system supports role-based access control using the following user types:
+
+PERSONAL
+
+CREATOR
+
+BUSINESS
+
+Each user type has different access privileges within the system.
