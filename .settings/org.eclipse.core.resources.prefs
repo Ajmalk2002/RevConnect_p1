@@ -1,10 +1,20 @@
-#Thu Jan 29 11:14:38 IST 2026
+#Thu Jan 29 22:34:25 IST 2026
 eclipse.preferences.version=1
 encoding//src/main/java/com/revconnect/cli/RevConnectApp.java=UTF-8
+encoding//src/main/java/com/revconnect/dao/ConnectionDao.java=UTF-8
+encoding//src/main/java/com/revconnect/dao/ConnectionDaoImpl.java=UTF-8
 encoding//src/main/java/com/revconnect/dao/FeedDaoImpl.java=UTF-8
+encoding//src/main/java/com/revconnect/dao/FollowDaoImpl.java=UTF-8
+encoding//src/main/java/com/revconnect/dao/LikeDaoImpl.java=UTF-8
+encoding//src/main/java/com/revconnect/dao/PostDaoImpl.java=UTF-8
 encoding//src/main/java/com/revconnect/dao/ProfileDaoImpl.java=UTF-8
 encoding//src/main/java/com/revconnect/dao/UserDaoImpl.java=UTF-8
 encoding//src/main/java/com/revconnect/service/AuthService.java=UTF-8
 encoding//src/main/java/com/revconnect/service/FeedService.java=UTF-8
 encoding//src/main/java/com/revconnect/service/ProfileService.java=UTF-8
+encoding//src/test/java/com/revconnect/dao/CommentDaoTest.java=UTF-8
+encoding//src/test/java/com/revconnect/dao/ConnectionDaoTest.java=UTF-8
+encoding//src/test/java/com/revconnect/dao/FollowDaoTest.java=UTF-8
+encoding//src/test/java/com/revconnect/dao/LikeDaoTest.java=UTF-8
+encoding//src/test/java/com/revconnect/dao/PostDaoTest.java=UTF-8
 encoding//src/test/java/com/revconnect/dao/UserDaoTest.java=UTF-8

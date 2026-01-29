@@ -121,4 +121,34 @@ public class PostDaoImpl implements PostDao {
             try { if (con != null) con.close(); } catch (Exception e) {}
         }
     }
+
+    // ✅ REQUIRED FOR NOTIFICATIONS
+    public int getPostOwner(int postId) {
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            con = DBConnection.getConnection();
+            ps = con.prepareStatement(
+                "SELECT USER_ID FROM POSTS WHERE POST_ID=?"
+            );
+            ps.setInt(1, postId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("USER_ID");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception e) {}
+            try { if (ps != null) ps.close(); } catch (Exception e) {}
+            try { if (con != null) con.close(); } catch (Exception e) {}
+        }
+
+        return -1;
+    }
 }

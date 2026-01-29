@@ -1,6 +1,8 @@
 package com.revconnect.dao;
 
 public interface LikeDao {
- void likePost(int userId,int postId);
- void unlikePost(int userId,int postId);
+
+    boolean likePost(int userId, int postId);
+
+    boolean unlikePost(int userId, int postId);
 }
