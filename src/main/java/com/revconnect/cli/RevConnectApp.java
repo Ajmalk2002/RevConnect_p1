@@ -102,7 +102,11 @@ public class RevConnectApp {
         int opt = Integer.parseInt(sc.nextLine());
 
         if (opt == 1) {
-            boolean success = profileService.createOrEditProfile(user.getUserId(), sc);
+            boolean success = profileService.createOrEditProfile(
+                    user.getUserId(),
+                    user.getUserType(),   // ✅ PASS USER TYPE
+                    sc
+            );
             System.out.println(success ? "✅ Profile saved" : "❌ Save failed");
         }
         else if (opt == 2) {
@@ -128,7 +132,6 @@ public class RevConnectApp {
             System.out.print("Enter choice: ");
 
             int choice = Integer.parseInt(sc.nextLine());
-
             if (choice == 5) return;
 
             if (choice == 1) {
@@ -174,8 +177,7 @@ public class RevConnectApp {
             }
             else if (choice == 4) {
                 System.out.print("Post ID: ");
-                int postId = Integer.parseInt(sc.nextLine());
-                postDao.deletePost(postId, user.getUserId());
+                postDao.deletePost(Integer.parseInt(sc.nextLine()), user.getUserId());
                 System.out.println("🗑 Post deleted");
             }
         }
@@ -221,9 +223,7 @@ public class RevConnectApp {
             }
             else if (choice == 4) {
                 System.out.print("Post ID: ");
-                int postId = Integer.parseInt(sc.nextLine());
-                List<Comment> list = commentDao.getCommentsByPost(postId);
-                for (Comment c : list)
+                for (Comment c : commentDao.getCommentsByPost(Integer.parseInt(sc.nextLine())))
                     System.out.println(c.getContent());
             }
             else if (choice == 5) {
@@ -286,8 +286,7 @@ public class RevConnectApp {
             if (choice == 5) return;
 
             if (choice == 1) {
-                List<Post> feed = feedDao.getPersonalizedFeed(user.getUserId());
-                for (Post p : feed)
+                for (Post p : feedDao.getPersonalizedFeed(user.getUserId()))
                     System.out.println(p.getPostId() + " | " + p.getContent());
             }
             else if (choice == 2) {

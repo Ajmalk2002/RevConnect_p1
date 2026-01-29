@@ -1,26 +1,100 @@
-
 package com.revconnect.core;
+
 public class Profile {
- private int userId;
- private String name;
- private String bio;
- private String location;
- private String website;
- private String profilePic;
- public int getUserId(){return userId;}
- public void setUserId(int id){this.userId=id;}
- public String getName(){return name;}
- public void setName(String n){this.name=n;}
- public String getBio(){return bio;}
- public void setBio(String b){this.bio=b;}
- public String getLocation(){return location;}
- public void setLocation(String l){this.location=l;}
- public String getWebsite(){return website;}
- public void setWebsite(String w){this.website=w;}
- public String getProfilePic() {
-     return profilePic;
- }
- public void setProfilePic(String profilePic) {
-     this.profilePic = profilePic;
- }
+
+    private int profileId;   // optional but recommended
+    private int userId;
+
+    // Common profile fields
+    private String name;
+    private String bio;
+    private String location;
+    private String website;
+    private String profilePic;
+
+    // Creator / Business specific fields
+    private String category;
+    private String businessAddress;
+    private String contactInfo;
+
+    // Getters & Setters
+    public int getProfileId() {
+        return profileId;
+    }
+
+    public void setProfileId(int profileId) {
+        this.profileId = profileId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getBusinessAddress() {
+        return businessAddress;
+    }
+
+    public void setBusinessAddress(String businessAddress) {
+        this.businessAddress = businessAddress;
+    }
+
+    public String getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
+    }
 }

@@ -25,6 +25,8 @@ public class UserDaoTest {
         int result = dao.register(user);
 
         assertEquals(1, result);
+        
+        System.out.println("Register Success");
     }
 
     /*
@@ -44,5 +46,6 @@ public class UserDaoTest {
         int result = dao.register(user);
 
         assertEquals(0, result);
+        
     }
 }

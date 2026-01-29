@@ -10,7 +10,8 @@ import com.revconnect.core.Profile;
 
 public class ProfileDaoImpl implements ProfileDao {
 
-    // Uses stored procedure: sp_save_profile
+    // Uses stored procedure: SP_SAVE_PROFILE
+    @Override
     public void saveOrUpdate(Profile p) {
 
         Connection con = null;
@@ -18,7 +19,7 @@ public class ProfileDaoImpl implements ProfileDao {
 
         try {
             con = DBConnection.getConnection();
-            cs = con.prepareCall("{ call sp_save_profile(?,?,?,?,?,?) }");
+            cs = con.prepareCall("{ call SP_SAVE_PROFILE(?,?,?,?,?,?,?,?,?) }");
 
             cs.setInt(1, p.getUserId());
             cs.setString(2, p.getName());
@@ -26,11 +27,15 @@ public class ProfileDaoImpl implements ProfileDao {
             cs.setString(4, p.getLocation());
             cs.setString(5, p.getWebsite());
             cs.setString(6, p.getProfilePic());
+            cs.setString(7, p.getCategory());
+            cs.setString(8, p.getBusinessAddress());
+            cs.setString(9, p.getContactInfo());
 
             cs.execute();
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("Error saving profile", e); // 🔥 IMPORTANT
         } finally {
             try { if (cs != null) cs.close(); } catch (Exception e) {}
             try { if (con != null) con.close(); } catch (Exception e) {}
@@ -38,6 +43,7 @@ public class ProfileDaoImpl implements ProfileDao {
     }
 
     // View profile from PROFILES table
+    @Override
     public void viewProfile(int userId) {
 
         Connection con = null;
@@ -47,24 +53,35 @@ public class ProfileDaoImpl implements ProfileDao {
         try {
             con = DBConnection.getConnection();
             ps = con.prepareStatement(
-                "SELECT * FROM profiles WHERE user_id=?"
+                "SELECT * FROM PROFILES WHERE USER_ID = ?"
             );
 
             ps.setInt(1, userId);
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                System.out.println("Name     : " + rs.getString("name"));
-                System.out.println("Bio      : " + rs.getString("bio"));
-                System.out.println("Location : " + rs.getString("location"));
-                System.out.println("Website  : " + rs.getString("website"));
-                System.out.println("Pic Path : " + rs.getString("profile_pic"));
+                System.out.println("Name     : " + rs.getString("NAME"));
+                System.out.println("Bio      : " + rs.getString("BIO"));
+                System.out.println("Location : " + rs.getString("LOCATION"));
+                System.out.println("Website  : " + rs.getString("WEBSITE"));
+                System.out.println("Pic Path : " + rs.getString("PROFILE_PIC"));
+
+                // Optional (Business / Creator)
+                if (rs.getString("CATEGORY") != null)
+                    System.out.println("Category : " + rs.getString("CATEGORY"));
+
+                if (rs.getString("BUSINESS_ADDRESS") != null)
+                    System.out.println("Address  : " + rs.getString("BUSINESS_ADDRESS"));
+
+                if (rs.getString("CONTACT_INFO") != null)
+                    System.out.println("Contact  : " + rs.getString("CONTACT_INFO"));
             } else {
                 System.out.println("Profile not found.");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("Error viewing profile", e);
         } finally {
             try { if (rs != null) rs.close(); } catch (Exception e) {}
             try { if (ps != null) ps.close(); } catch (Exception e) {}
