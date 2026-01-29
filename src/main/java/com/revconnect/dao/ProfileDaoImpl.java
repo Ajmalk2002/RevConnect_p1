@@ -19,16 +19,17 @@ public class ProfileDaoImpl implements ProfileDao {
 
 	    try {
 	        con = DBConnection.getConnection();
-	        cs = con.prepareCall("{ call SP_SAVE_PROFILE(?,?,?,?,?,?,?,?) }");
+	        cs = con.prepareCall("{ call SP_SAVE_PROFILE(?,?,?,?,?,?,?,?,?) }");
 
 	        cs.setInt(1, p.getUserId());
 	        cs.setString(2, p.getName());
 	        cs.setString(3, p.getBio());
 	        cs.setString(4, p.getLocation());
 	        cs.setString(5, p.getWebsite());
-	        cs.setString(6, p.getCategory());
-	        cs.setString(7, p.getBusinessAddress());
-	        cs.setString(8, p.getContactInfo());
+	        cs.setString(6, p.getProfilePic());
+	        cs.setString(7, p.getCategory());
+	        cs.setString(8, p.getBusinessAddress());
+	        cs.setString(9, p.getContactInfo());
 
 	        cs.execute();
 

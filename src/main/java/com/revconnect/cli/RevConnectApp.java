@@ -13,6 +13,9 @@ import com.revconnect.dao.*;
 import com.revconnect.service.AuthService;
 import com.revconnect.service.ProfileService;
 import com.revconnect.service.NotificationService;
+import static com.revconnect.util.InputUtil.readInt;
+import static com.revconnect.util.InputUtil.readNonEmpty;
+
 
 public class RevConnectApp {
 
@@ -494,135 +497,142 @@ public class RevConnectApp {
 
 			switch (choice) {
 
-		    case 1: {
-		        log.info("Send Connection Request selected by userId=" + user.getUserId());
+			case 1: {
+				log.info("Send Connection Request selected by userId="
+						+ user.getUserId());
 
-		        System.out.print("Enter User ID: ");
-		        int target = readInt(sc);
+				System.out.print("Enter User ID: ");
+				int target = readInt(sc);
 
-		        boolean sent = connectionDao.sendRequest(
-		                user.getUserId(), target);
+				boolean sent = connectionDao.sendRequest(user.getUserId(),
+						target);
 
-		        if (sent) {
-		            notificationService.notify(
-		                    target, "New connection request");
+				if (sent) {
+					notificationService
+							.notify(target, "New connection request");
 
-		            log.info("Connection request sent successfully. fromUser="
-		                    + user.getUserId() + ", toUser=" + target);
+					log.info("Connection request sent successfully. fromUser="
+							+ user.getUserId() + ", toUser=" + target);
 
-		            System.out.println("📨 Request sent successfully");
-		        } else {
-		            log.warn("Failed to send connection request. fromUser="
-		                    + user.getUserId() + ", toUser=" + target);
+					System.out.println("📨 Request sent successfully");
+				} else {
+					log.warn("Failed to send connection request. fromUser="
+							+ user.getUserId() + ", toUser=" + target);
 
-		            System.out.println("❌ Unable to send request");
-		        }
-		        break;
-		    }
+					System.out.println("❌ Unable to send request");
+				}
+				break;
+			}
 
-		    case 2: {
-		        log.info("View Pending Requests selected by userId=" + user.getUserId());
+			case 2: {
+				log.info("View Pending Requests selected by userId="
+						+ user.getUserId());
 
-		        List<String> pending =
-		                connectionDao.getPendingRequests(user.getUserId());
+				List<String> pending = connectionDao.getPendingRequests(user
+						.getUserId());
 
-		        if (pending.isEmpty()) {
-		            log.info("No pending connection requests for userId="
-		                    + user.getUserId());
+				if (pending.isEmpty()) {
+					log.info("No pending connection requests for userId="
+							+ user.getUserId());
 
-		            System.out.println("ℹ No pending requests");
-		        } else {
-		            log.info("Found " + pending.size()
-		                    + " pending requests for userId=" + user.getUserId());
+					System.out.println("ℹ No pending requests");
+				} else {
+					log.info("Found " + pending.size()
+							+ " pending requests for userId="
+							+ user.getUserId());
 
-		            System.out.println("=== Pending Requests ===");
-		            for (String p : pending) {
-		                System.out.println(p);
-		            }
-		        }
-		        break;
-		    }
+					System.out.println("=== Pending Requests ===");
+					for (String p : pending) {
+						System.out.println(p);
+					}
+				}
+				break;
+			}
 
-		    case 3: {
-		        log.info("View My Connections selected by userId=" + user.getUserId());
+			case 3: {
+				log.info("View My Connections selected by userId="
+						+ user.getUserId());
 
-		        List<Integer> connections =
-		                connectionDao.getConnections(user.getUserId());
+				List<Integer> connections = connectionDao.getConnections(user
+						.getUserId());
 
-		        if (connections.isEmpty()) {
-		            log.info("User has no connections. userId=" + user.getUserId());
+				if (connections.isEmpty()) {
+					log.info("User has no connections. userId="
+							+ user.getUserId());
 
-		            System.out.println("ℹ No connections yet");
-		        } else {
-		            log.info("User has " + connections.size()
-		                    + " connections. userId=" + user.getUserId());
+					System.out.println("ℹ No connections yet");
+				} else {
+					log.info("User has " + connections.size()
+							+ " connections. userId=" + user.getUserId());
 
-		            System.out.println("=== My Connections ===");
-		            for (Integer id : connections) {
-		                System.out.println("Connected User ID: " + id);
-		            }
-		        }
-		        break;
-		    }
+					System.out.println("=== My Connections ===");
+					for (Integer id : connections) {
+						System.out.println("Connected User ID: " + id);
+					}
+				}
+				break;
+			}
 
-		    case 4: {
-		        log.info("Accept Connection Request selected by userId=" + user.getUserId());
+			case 4: {
+				log.info("Accept Connection Request selected by userId="
+						+ user.getUserId());
 
-		        System.out.print("Enter Requester ID: ");
-		        int req = readInt(sc);
+				System.out.print("Enter Requester ID: ");
+				int req = readInt(sc);
 
-		        boolean accepted =
-		                connectionDao.acceptRequest(req, user.getUserId());
+				boolean accepted = connectionDao.acceptRequest(req,
+						user.getUserId());
 
-		        if (accepted) {
-		            notificationService.notify(
-		                    req, "Your connection request was accepted");
+				if (accepted) {
+					notificationService.notify(req,
+							"Your connection request was accepted");
 
-		            log.info("Connection request accepted. fromUser="
-		                    + req + ", toUser=" + user.getUserId());
+					log.info("Connection request accepted. fromUser=" + req
+							+ ", toUser=" + user.getUserId());
 
-		            System.out.println("✅ Connection accepted");
-		        } else {
-		            log.warn("Failed to accept connection request. fromUser="
-		                    + req + ", toUser=" + user.getUserId());
+					System.out.println("✅ Connection accepted");
+				} else {
+					log.warn("Failed to accept connection request. fromUser="
+							+ req + ", toUser=" + user.getUserId());
 
-		            System.out.println("❌ Unable to accept request");
-		        }
-		        break;
-		    }
+					System.out.println("❌ Unable to accept request");
+				}
+				break;
+			}
 
-		    case 5: {
-		        log.warn("Reject Connection Request selected by userId=" + user.getUserId());
+			case 5: {
+				log.warn("Reject Connection Request selected by userId="
+						+ user.getUserId());
 
-		        System.out.print("Enter Requester ID: ");
-		        int rid = readInt(sc);
+				System.out.print("Enter Requester ID: ");
+				int rid = readInt(sc);
 
-		        boolean rejected =
-		                connectionDao.rejectRequest(rid, user.getUserId());
+				boolean rejected = connectionDao.rejectRequest(rid,
+						user.getUserId());
 
-		        if (rejected) {
-		            log.warn("Connection request rejected. fromUser="
-		                    + rid + ", toUser=" + user.getUserId());
+				if (rejected) {
+					log.warn("Connection request rejected. fromUser=" + rid
+							+ ", toUser=" + user.getUserId());
 
-		            System.out.println("❌ Connection rejected");
-		        } else {
-		            log.warn("No connection request found to reject. fromUser="
-		                    + rid + ", toUser=" + user.getUserId());
+					System.out.println("❌ Connection rejected");
+				} else {
+					log.warn("No connection request found to reject. fromUser="
+							+ rid + ", toUser=" + user.getUserId());
 
-		            System.out.println("⚠ No such request found");
-		        }
-		        break;
-		    }
+					System.out.println("⚠ No such request found");
+				}
+				break;
+			}
 
-		    case 6:
-		        log.info("Exiting Network menu for userId=" + user.getUserId());
-		        return;
+			case 6:
+				log.info("Exiting Network menu for userId=" + user.getUserId());
+				return;
 
-		    default:
-		        log.error("Invalid network menu option selected: " + choice
-		                + ", userId=" + user.getUserId());
-		        System.out.println("❌ Invalid option");
-		}
+			default:
+				log.error("Invalid network menu option selected: " + choice
+						+ ", userId=" + user.getUserId());
+				System.out.println("❌ Invalid option");
+			}
 
 		}
 	}
@@ -642,99 +652,98 @@ public class RevConnectApp {
 
 			switch (choice) {
 
-		    case 1:
-		        log.info("View Personalized Feed selected by userId=" + user.getUserId());
+			case 1:
+				log.info("View Personalized Feed selected by userId="
+						+ user.getUserId());
 
-		        List<Post> feed =
-		                feedDao.getPersonalizedFeed(user.getUserId());
+				List<Post> feed = feedDao.getPersonalizedFeed(user.getUserId());
 
-		        if (feed.isEmpty()) {
-		            log.info("Personalized feed is empty for userId="
-		                    + user.getUserId());
-		            System.out.println("ℹ Feed is empty");
-		        } else {
-		            log.info("Loaded " + feed.size()
-		                    + " feed posts for userId=" + user.getUserId());
-		            for (Post p : feed) {
-		                System.out.println(p.getPostId() + " | "
-		                        + p.getContent());
-		            }
-		        }
-		        break;
+				if (feed.isEmpty()) {
+					log.info("Personalized feed is empty for userId="
+							+ user.getUserId());
+					System.out.println("ℹ Feed is empty");
+				} else {
+					log.info("Loaded " + feed.size()
+							+ " feed posts for userId=" + user.getUserId());
+					for (Post p : feed) {
+						System.out.println(p.getPostId() + " | "
+								+ p.getContent());
+					}
+				}
+				break;
 
-		    case 2:
-		        log.info("View Trending Posts selected by userId=" + user.getUserId());
+			case 2:
+				log.info("View Trending Posts selected by userId="
+						+ user.getUserId());
 
-		        List<Post> trending =
-		                feedDao.getTrendingPosts();
+				List<Post> trending = feedDao.getTrendingPosts();
 
-		        if (trending.isEmpty()) {
-		            log.warn("No trending posts available");
-		        } else {
-		            log.info("Loaded " + trending.size() + " trending posts");
-		            for (Post p : trending) {
-		                System.out.println(p.getPostId() + " | "
-		                        + p.getContent());
-		            }
-		        }
-		        break;
+				if (trending.isEmpty()) {
+					log.warn("No trending posts available");
+				} else {
+					log.info("Loaded " + trending.size() + " trending posts");
+					for (Post p : trending) {
+						System.out.println(p.getPostId() + " | "
+								+ p.getContent());
+					}
+				}
+				break;
 
-		    case 3:
-		        log.info("Search Posts by Hashtag selected by userId="
-		                + user.getUserId());
+			case 3:
+				log.info("Search Posts by Hashtag selected by userId="
+						+ user.getUserId());
 
-		        System.out.print("Hashtag: ");
-		        String hashtag = sc.nextLine();
+				System.out.print("Hashtag: ");
+				String hashtag = sc.nextLine();
 
-		        List<Post> hashtagPosts =
-		                feedDao.searchByHashtag(hashtag);
+				List<Post> hashtagPosts = feedDao.searchByHashtag(hashtag);
 
-		        if (hashtagPosts.isEmpty()) {
-		            log.warn("No posts found for hashtag #" + hashtag);
-		        } else {
-		            log.info("Found " + hashtagPosts.size()
-		                    + " posts for hashtag #" + hashtag);
-		            for (Post p : hashtagPosts) {
-		                System.out.println(p.getPostId() + " | "
-		                        + p.getContent());
-		            }
-		        }
-		        break;
+				if (hashtagPosts.isEmpty()) {
+					log.warn("No posts found for hashtag #" + hashtag);
+				} else {
+					log.info("Found " + hashtagPosts.size()
+							+ " posts for hashtag #" + hashtag);
+					for (Post p : hashtagPosts) {
+						System.out.println(p.getPostId() + " | "
+								+ p.getContent());
+					}
+				}
+				break;
 
-		    case 4:
-		        log.info("Filter Feed by User Type selected by userId="
-		                + user.getUserId());
+			case 4:
+				log.info("Filter Feed by User Type selected by userId="
+						+ user.getUserId());
 
-		        System.out.print("Type: ");
-		        String type = sc.nextLine();
+				System.out.print("Type: ");
+				String type = sc.nextLine();
 
-		        List<Post> filtered =
-		                feedDao.filterFeed(user.getUserId(), type);
+				List<Post> filtered = feedDao
+						.filterFeed(user.getUserId(), type);
 
-		        if (filtered.isEmpty()) {
-		            log.warn("No feed posts found for type=" + type
-		                    + ", userId=" + user.getUserId());
-		        } else {
-		            log.info("Found " + filtered.size()
-		                    + " feed posts for type=" + type
-		                    + ", userId=" + user.getUserId());
-		            for (Post p : filtered) {
-		                System.out.println(p.getPostId() + " | "
-		                        + p.getContent());
-		            }
-		        }
-		        break;
+				if (filtered.isEmpty()) {
+					log.warn("No feed posts found for type=" + type
+							+ ", userId=" + user.getUserId());
+				} else {
+					log.info("Found " + filtered.size()
+							+ " feed posts for type=" + type + ", userId="
+							+ user.getUserId());
+					for (Post p : filtered) {
+						System.out.println(p.getPostId() + " | "
+								+ p.getContent());
+					}
+				}
+				break;
 
-		    case 5:
-		        log.info("Exiting Feed & Discovery menu for userId="
-		                + user.getUserId());
-		        return;
+			case 5:
+				log.info("Exiting Feed & Discovery menu for userId="
+						+ user.getUserId());
+				return;
 
-		    default:
-		        log.error("Invalid Feed menu option selected: " + choice
-		                + ", userId=" + user.getUserId());
-		        System.out.println("❌ Invalid option");
-		}
+			default:
+				log.error("Invalid Feed menu option selected: " + choice
+						+ ", userId=" + user.getUserId());
+				System.out.println("❌ Invalid option");
+			}
 
 		}
 	}
@@ -753,108 +762,88 @@ public class RevConnectApp {
 
 			switch (choice) {
 
-		    case 1:
-		        log.info("View UNREAD notifications selected by userId="
-		                + user.getUserId());
+			case 1:
+				log.info("View UNREAD notifications selected by userId="
+						+ user.getUserId());
 
-		        List<Notification> unread =
-		                notificationService.getUnread(user.getUserId());
+				List<Notification> unread = notificationService.getUnread(user
+						.getUserId());
 
-		        if (unread.isEmpty()) {
-		            log.info("No unread notifications for userId="
-		                    + user.getUserId());
-		            System.out.println("ℹ No unread notifications");
-		        } else {
-		            log.info("Unread notifications count="
-		                    + unread.size() + " for userId="
-		                    + user.getUserId());
+				if (unread.isEmpty()) {
+					log.info("No unread notifications for userId="
+							+ user.getUserId());
+					System.out.println("ℹ No unread notifications");
+				} else {
+					log.info("Unread notifications count=" + unread.size()
+							+ " for userId=" + user.getUserId());
 
-		            for (Notification n : unread) {
-		                System.out.println(n.getNotificationId() + " | "
-		                        + n.getMessage());
-		            }
-		        }
-		        break;
+					for (Notification n : unread) {
+						System.out.println(n.getNotificationId() + " | "
+								+ n.getMessage());
+					}
+				}
+				break;
 
-		    case 2:
-		        log.info("View ALL notifications selected by userId="
-		                + user.getUserId());
+			case 2:
+				log.info("View ALL notifications selected by userId="
+						+ user.getUserId());
 
-		        List<Notification> all =
-		                notificationService.getAll(user.getUserId());
+				List<Notification> all = notificationService.getAll(user
+						.getUserId());
 
-		        if (all.isEmpty()) {
-		            log.info("No notifications found for userId="
-		                    + user.getUserId());
-		            System.out.println("ℹ No notifications");
-		        } else {
-		            log.info("Total notifications count="
-		                    + all.size() + " for userId="
-		                    + user.getUserId());
+				if (all.isEmpty()) {
+					log.info("No notifications found for userId="
+							+ user.getUserId());
+					System.out.println("ℹ No notifications");
+				} else {
+					log.info("Total notifications count=" + all.size()
+							+ " for userId=" + user.getUserId());
 
-		            for (Notification n : all) {
-		                System.out.println(n.getNotificationId() + " | "
-		                        + n.getMessage() + " | "
-		                        + (n.isRead() ? "READ" : "UNREAD"));
-		            }
-		        }
-		        break;
+					for (Notification n : all) {
+						System.out.println(n.getNotificationId() + " | "
+								+ n.getMessage() + " | "
+								+ (n.isRead() ? "READ" : "UNREAD"));
+					}
+				}
+				break;
 
-		    case 3:
-		        log.info("Mark notification as READ selected by userId="
-		                + user.getUserId());
+			case 3:
+				log.info("Mark notification as READ selected by userId="
+						+ user.getUserId());
 
-		        System.out.print("Notification ID: ");
-		        int nid = readInt(sc);
+				System.out.print("Notification ID: ");
+				int nid = readInt(sc);
 
-		        try {
-		            notificationService.markRead(nid);
+				try {
+					notificationService.markRead(nid);
 
-		            log.info("Notification marked as READ. notificationId="
-		                    + nid + ", userId=" + user.getUserId());
+					log.info("Notification marked as READ. notificationId="
+							+ nid + ", userId=" + user.getUserId());
 
-		            System.out.println("✅ Marked as read");
+					System.out.println("✅ Marked as read");
 
-		        } catch (Exception e) {
+				} catch (Exception e) {
 
-		            log.error("Error marking notification as READ. notificationId="
-		                    + nid + ", userId=" + user.getUserId(), e);
+					log.error(
+							"Error marking notification as READ. notificationId="
+									+ nid + ", userId=" + user.getUserId(), e);
 
-		            System.out.println("❌ Unable to mark as read");
-		        }
-		        break;
+					System.out.println("❌ Unable to mark as read");
+				}
+				break;
 
+			case 4:
+				log.info("Exiting Notifications menu for userId="
+						+ user.getUserId());
+				return;
 
-		    case 4:
-		        log.info("Exiting Notifications menu for userId="
-		                + user.getUserId());
-		        return;
-
-		    default:
-		        log.error("Invalid Notifications menu option selected: "
-		                + choice + ", userId=" + user.getUserId());
-		        System.out.println("❌ Invalid option");
-		}
-
-		}
-	}
-
-	private static int readInt(Scanner sc) {
-		while (true) {
-			try {
-				return Integer.parseInt(sc.nextLine().trim());
-			} catch (NumberFormatException e) {
-				System.out.print("❌ Enter a valid number: ");
+			default:
+				log.error("Invalid Notifications menu option selected: "
+						+ choice + ", userId=" + user.getUserId());
+				System.out.println("❌ Invalid option");
 			}
+
 		}
 	}
 
-	private static String readNonEmpty(Scanner sc) {
-		while (true) {
-			String input = sc.nextLine().trim();
-			if (!input.isEmpty())
-				return input;
-			System.out.print("❌ Input cannot be empty: ");
-		}
-	}
 }

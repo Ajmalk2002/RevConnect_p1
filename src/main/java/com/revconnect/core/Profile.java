@@ -10,6 +10,7 @@ public class Profile {
     private String bio;
     private String location;
     private String website;
+    private String profilePic;
 
     // Creator / Business specific fields
     private String category;
@@ -65,6 +66,13 @@ public class Profile {
         this.website = website;
     }
 
+    public String getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
 
     public String getCategory() {
         return category;
