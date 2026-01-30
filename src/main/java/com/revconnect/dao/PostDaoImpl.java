@@ -7,147 +7,192 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revconnect.config.DBConnection;
-import com.revconnect.core.Post;
+import com.revconnect.model.Post;
 
 public class PostDaoImpl implements PostDao {
 
-    public void createPost(Post post) {
+	// to create post
 
-        Connection con = null;
-        PreparedStatement ps = null;
+	public void createPost(Post post) {
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(
-                "INSERT INTO POSTS (POST_ID, USER_ID, CONTENT, HASHTAGS) " +
-                "VALUES (POST_SEQ.NEXTVAL, ?, ?, ?)"
-            );
+		Connection con = null;
+		PreparedStatement ps = null;
 
-            ps.setInt(1, post.getUserId());
-            ps.setString(2, post.getContent());
-            ps.setString(3, post.getHashtags());
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement("INSERT INTO POSTS (POST_ID, USER_ID, CONTENT, HASHTAGS) "
+					+ "VALUES (POST_SEQ.NEXTVAL, ?, ?, ?)");
 
-            ps.executeUpdate();
+			ps.setInt(1, post.getUserId());
+			ps.setString(2, post.getContent());
+			ps.setString(3, post.getHashtags());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
-    }
+			ps.executeUpdate();
 
-    public List<Post> getMyPosts(int userId) {
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+	}
 
-        List<Post> list = new ArrayList<Post>();
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+	// to list all post
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(
-                "SELECT POST_ID, CONTENT, HASHTAGS FROM POSTS WHERE USER_ID=?"
-            );
-            ps.setInt(1, userId);
+	public List<Post> getMyPosts(int userId) {
 
-            rs = ps.executeQuery();
+		List<Post> list = new ArrayList<Post>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-            while (rs.next()) {
-                Post p = new Post();
-                p.setPostId(rs.getInt("POST_ID"));
-                p.setUserId(userId);
-                p.setContent(rs.getString("CONTENT"));
-                p.setHashtags(rs.getString("HASHTAGS"));
-                list.add(p);
-            }
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement("SELECT POST_ID, CONTENT, HASHTAGS FROM POSTS WHERE USER_ID=?");
+			ps.setInt(1, userId);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
-        return list;
-    }
+			rs = ps.executeQuery();
 
-    public void updatePost(Post post) {
+			while (rs.next()) {
+				Post p = new Post();
+				p.setPostId(rs.getInt("POST_ID"));
+				p.setUserId(userId);
+				p.setContent(rs.getString("CONTENT"));
+				p.setHashtags(rs.getString("HASHTAGS"));
+				list.add(p);
+			}
 
-        Connection con = null;
-        PreparedStatement ps = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+		return list;
+	}
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(
-                "UPDATE POSTS SET CONTENT=?, HASHTAGS=? WHERE POST_ID=? AND USER_ID=?"
-            );
+	// for update post
+	public void updatePost(Post post) {
 
-            ps.setString(1, post.getContent());
-            ps.setString(2, post.getHashtags());
-            ps.setInt(3, post.getPostId());
-            ps.setInt(4, post.getUserId());
+		Connection con = null;
+		PreparedStatement ps = null;
 
-            ps.executeUpdate();
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement("UPDATE POSTS SET CONTENT=?, HASHTAGS=? WHERE POST_ID=? AND USER_ID=?");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
-    }
+			ps.setString(1, post.getContent());
+			ps.setString(2, post.getHashtags());
+			ps.setInt(3, post.getPostId());
+			ps.setInt(4, post.getUserId());
 
-    public void deletePost(int postId, int userId) {
+			ps.executeUpdate();
 
-        Connection con = null;
-        PreparedStatement ps = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+	}
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(
-                "DELETE FROM POSTS WHERE POST_ID=? AND USER_ID=?"
-            );
+	// delete post
+	public void deletePost(int postId, int userId) {
 
-            ps.setInt(1, postId);
-            ps.setInt(2, userId);
+		Connection con = null;
+		PreparedStatement ps = null;
 
-            ps.executeUpdate();
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement("DELETE FROM POSTS WHERE POST_ID=? AND USER_ID=?");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
-    }
+			ps.setInt(1, postId);
+			ps.setInt(2, userId);
 
-    public int getPostOwner(int postId) {
+			ps.executeUpdate();
 
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+	}
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(
-                "SELECT USER_ID FROM POSTS WHERE POST_ID=?"
-            );
-            ps.setInt(1, postId);
-            rs = ps.executeQuery();
+	// to see post owner
+	public int getPostOwner(int postId) {
 
-            if (rs.next()) {
-                return rs.getInt("USER_ID");
-            }
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement("SELECT USER_ID FROM POSTS WHERE POST_ID=?");
+			ps.setInt(1, postId);
+			rs = ps.executeQuery();
 
-        return -1;
-    }
+			if (rs.next()) {
+				return rs.getInt("USER_ID");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+
+		return -1;
+	}
 }

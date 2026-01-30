@@ -7,183 +7,221 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revconnect.config.DBConnection;
-import com.revconnect.core.Post;
+import com.revconnect.model.Post;
 
 public class FeedDaoImpl implements FeedDao {
 
-    public List<Post> getPersonalizedFeed(int userId) {
+	// to get feed
 
-        List<Post> list = new ArrayList<Post>();
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+	public List<Post> getPersonalizedFeed(int userId) {
 
-        String sql =
-            "SELECT post_id, user_id, content, hashtags " +
-            "FROM posts WHERE user_id = ? " +
-            "OR user_id IN ( " +
-            "   SELECT CASE " +
-            "       WHEN requester_id = ? THEN receiver_id " +
-            "       ELSE requester_id " +
-            "   END " +
-            "   FROM connections " +
-            "   WHERE status = 'ACCEPTED' " +
-            "   AND (requester_id = ? OR receiver_id = ?) " +
-            ") " +
-            "OR user_id IN ( " +
-            "   SELECT followee_id FROM followers WHERE follower_id = ? " +
-            ") " +
-            "ORDER BY post_id DESC";
+		List<Post> list = new ArrayList<Post>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(sql);
+		String sql = "SELECT post_id, user_id, content, hashtags "
+				+ "FROM posts WHERE user_id = ? " + "OR user_id IN ( "
+				+ "   SELECT CASE "
+				+ "       WHEN requester_id = ? THEN receiver_id "
+				+ "       ELSE requester_id " + "   END "
+				+ "   FROM connections " + "   WHERE status = 'ACCEPTED' "
+				+ "   AND (requester_id = ? OR receiver_id = ?) " + ") "
+				+ "OR user_id IN ( "
+				+ "   SELECT followee_id FROM followers WHERE follower_id = ? "
+				+ ") " + "ORDER BY post_id DESC";
 
-            ps.setInt(1, userId);
-            ps.setInt(2, userId);
-            ps.setInt(3, userId);
-            ps.setInt(4, userId);
-            ps.setInt(5, userId);
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(sql);
 
-            rs = ps.executeQuery();
+			ps.setInt(1, userId);
+			ps.setInt(2, userId);
+			ps.setInt(3, userId);
+			ps.setInt(4, userId);
+			ps.setInt(5, userId);
 
-            while (rs.next()) {
-                Post p = new Post();
-                p.setPostId(rs.getInt("POST_ID"));
-                p.setUserId(rs.getInt("USER_ID"));
-                p.setContent(rs.getString("CONTENT"));
-                p.setHashtags(rs.getString("HASHTAGS"));
-                list.add(p);
-            }
+			rs = ps.executeQuery();
 
-        } catch (Exception e) {
-            System.out.println("⚠ Unable to load personalized feed");
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
+			while (rs.next()) {
+				Post p = new Post();
+				p.setPostId(rs.getInt("POST_ID"));
+				p.setUserId(rs.getInt("USER_ID"));
+				p.setContent(rs.getString("CONTENT"));
+				p.setHashtags(rs.getString("HASHTAGS"));
+				list.add(p);
+			}
 
-        return list;
-    }
+		} catch (Exception e) {
+			System.out.println("⚠ Unable to load personalized feed");
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
 
-    public List<Post> getTrendingPosts() {
+		return list;
+	}
 
-        List<Post> list = new ArrayList<Post>();
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+	// to see trending by likes
+	public List<Post> getTrendingPosts() {
 
-        String sql =
-            "SELECT p.post_id, p.user_id, p.content, p.hashtags " +
-            "FROM posts p " +
-            "LEFT JOIN ( " +
-            "   SELECT post_id, COUNT(*) cnt " +
-            "   FROM likes " +
-            "   GROUP BY post_id " +
-            ") l ON p.post_id = l.post_id " +
-            "ORDER BY NVL(l.cnt, 0) DESC, p.post_id DESC";
+		List<Post> list = new ArrayList<Post>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
+		String sql = "SELECT p.post_id, p.user_id, p.content, p.hashtags "
+				+ "FROM posts p " + "LEFT JOIN ( "
+				+ "   SELECT post_id, COUNT(*) cnt " + "   FROM likes "
+				+ "   GROUP BY post_id " + ") l ON p.post_id = l.post_id "
+				+ "ORDER BY NVL(l.cnt, 0) DESC, p.post_id DESC";
 
-            while (rs.next()) {
-                Post p = new Post();
-                p.setPostId(rs.getInt("POST_ID"));
-                p.setUserId(rs.getInt("USER_ID"));
-                p.setContent(rs.getString("CONTENT"));
-                p.setHashtags(rs.getString("HASHTAGS"));
-                list.add(p);
-            }
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(sql);
+			rs = ps.executeQuery();
 
-        } catch (Exception e) {
-            System.out.println("⚠ Unable to load trending posts");
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
+			while (rs.next()) {
+				Post p = new Post();
+				p.setPostId(rs.getInt("POST_ID"));
+				p.setUserId(rs.getInt("USER_ID"));
+				p.setContent(rs.getString("CONTENT"));
+				p.setHashtags(rs.getString("HASHTAGS"));
+				list.add(p);
+			}
 
-        return list;
-    }
+		} catch (Exception e) {
+			System.out.println("⚠ Unable to load trending posts");
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
 
-    public List<Post> searchByHashtag(String hashtag) {
+		return list;
+	}
 
-        List<Post> list = new ArrayList<Post>();
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+	// search by hashtag
+	public List<Post> searchByHashtag(String hashtag) {
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(
-                "SELECT post_id, user_id, content, hashtags " +
-                "FROM posts WHERE hashtags LIKE ?"
-            );
-            ps.setString(1, "%" + hashtag + "%");
+		List<Post> list = new ArrayList<Post>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-            rs = ps.executeQuery();
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement("SELECT post_id, user_id, content, hashtags "
+					+ "FROM posts WHERE hashtags LIKE ?");
+			ps.setString(1, "%" + hashtag + "%");
 
-            while (rs.next()) {
-                Post p = new Post();
-                p.setPostId(rs.getInt("POST_ID"));
-                p.setUserId(rs.getInt("USER_ID"));
-                p.setContent(rs.getString("CONTENT"));
-                p.setHashtags(rs.getString("HASHTAGS"));
-                list.add(p);
-            }
+			rs = ps.executeQuery();
 
-        } catch (Exception e) {
-            System.out.println("⚠ Error searching hashtag");
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
+			while (rs.next()) {
+				Post p = new Post();
+				p.setPostId(rs.getInt("POST_ID"));
+				p.setUserId(rs.getInt("USER_ID"));
+				p.setContent(rs.getString("CONTENT"));
+				p.setHashtags(rs.getString("HASHTAGS"));
+				list.add(p);
+			}
 
-        return list;
-    }
+		} catch (Exception e) {
+			System.out.println("⚠ Error searching hashtag");
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
 
-    public List<Post> filterFeed(int userId, String userType) {
+		return list;
+	}
 
-        List<Post> list = new ArrayList<Post>();
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+	// filter feeds by id or usertype
+	public List<Post> filterFeed(int userId, String userType) {
 
-        String sql =
-        	    "SELECT p.post_id, p.user_id, p.content, p.hashtags " +
-        	    "FROM posts p " +
-        	    "JOIN users u ON p.user_id = u.user_id " +
-        	    "WHERE UPPER(u.user_type) = UPPER(?) " +
-        	    "ORDER BY p.post_id DESC";
+		List<Post> list = new ArrayList<Post>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
+		String sql = "SELECT p.post_id, p.user_id, p.content, p.hashtags "
+				+ "FROM posts p " + "JOIN users u ON p.user_id = u.user_id "
+				+ "WHERE UPPER(u.user_type) = UPPER(?) "
+				+ "ORDER BY p.post_id DESC";
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, userType);
-            rs = ps.executeQuery();
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement(sql);
+			ps.setString(1, userType);
+			rs = ps.executeQuery();
 
-            while (rs.next()) {
-                Post p = new Post();
-                p.setPostId(rs.getInt("POST_ID"));
-                p.setUserId(rs.getInt("USER_ID"));
-                p.setContent(rs.getString("CONTENT"));
-                p.setHashtags(rs.getString("HASHTAGS"));
-                list.add(p);
-            }
+			while (rs.next()) {
+				Post p = new Post();
+				p.setPostId(rs.getInt("POST_ID"));
+				p.setUserId(rs.getInt("USER_ID"));
+				p.setContent(rs.getString("CONTENT"));
+				p.setHashtags(rs.getString("HASHTAGS"));
+				list.add(p);
+			}
 
-        } catch (Exception e) {
-            System.out.println("⚠ Error filtering feed");
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
+		} catch (Exception e) {
+			System.out.println("⚠ Error filtering feed");
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
 
-        return list;
-    }
+		return list;
+	}
 }

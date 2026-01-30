@@ -8,63 +8,77 @@ import com.revconnect.config.DBConnection;
 
 public class LikeDaoImpl implements LikeDao {
 
-    @Override
-    public boolean likePost(int userId, int postId) {
+	// like posts
+	@Override
+	public boolean likePost(int userId, int postId) {
 
-        Connection c = null;
-        PreparedStatement ps = null;
+		Connection c = null;
+		PreparedStatement ps = null;
 
-        try {
-            c = DBConnection.getConnection();
-            ps = c.prepareStatement(
-                "INSERT INTO likes (like_id, post_id, user_id) " +
-                "VALUES (like_seq.NEXTVAL, ?, ?)"
-            );
+		try {
+			c = DBConnection.getConnection();
+			ps = c.prepareStatement("INSERT INTO likes (like_id, post_id, user_id) "
+					+ "VALUES (like_seq.NEXTVAL, ?, ?)");
 
-            ps.setInt(1, postId);
-            ps.setInt(2, userId);
+			ps.setInt(1, postId);
+			ps.setInt(2, userId);
 
-            ps.executeUpdate();
-            return true; 
+			ps.executeUpdate();
+			return true;
 
-        } catch (SQLException e) {
+		} catch (SQLException e) {
 
-            if (e.getErrorCode() == 1) {
-                return false; 
-            }
+			if (e.getErrorCode() == 1) {
+				return false;
+			}
 
-            throw new RuntimeException("Error while liking post", e);
+			throw new RuntimeException("Error while liking post", e);
 
-        } finally {
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (c != null) c.close(); } catch (Exception e) {}
-        }
-    }
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (c != null)
+					c.close();
+			} catch (Exception e) {
+			}
+		}
+	}
 
-    @Override
-    public boolean unlikePost(int userId, int postId) {
+	// unlike post
+	@Override
+	public boolean unlikePost(int userId, int postId) {
 
-        Connection c = null;
-        PreparedStatement ps = null;
+		Connection c = null;
+		PreparedStatement ps = null;
 
-        try {
-            c = DBConnection.getConnection();
-            ps = c.prepareStatement(
-                "DELETE FROM likes WHERE post_id=? AND user_id=?"
-            );
+		try {
+			c = DBConnection.getConnection();
+			ps = c.prepareStatement("DELETE FROM likes WHERE post_id=? AND user_id=?");
 
-            ps.setInt(1, postId);
-            ps.setInt(2, userId);
+			ps.setInt(1, postId);
+			ps.setInt(2, userId);
 
-            int rows = ps.executeUpdate();
-            return rows > 0; 
+			int rows = ps.executeUpdate();
+			return rows > 0;
 
-        } catch (Exception e) {
-            throw new RuntimeException("Error while unliking post", e);
+		} catch (Exception e) {
+			throw new RuntimeException("Error while unliking post", e);
 
-        } finally {
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (c != null) c.close(); } catch (Exception e) {}
-        }
-    }
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (c != null)
+					c.close();
+			} catch (Exception e) {
+			}
+		}
+	}
 }

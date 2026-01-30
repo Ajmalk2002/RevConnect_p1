@@ -3,7 +3,7 @@ package com.revconnect.dao;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import com.revconnect.core.Comment;
+import com.revconnect.model.Comment;
 
 public class CommentDaoTest {
 
@@ -15,7 +15,7 @@ public class CommentDaoTest {
         Comment c = new Comment();
         c.setPostId(1);
         c.setUserId(1);
-        c.setContent("JUnit Comment");
+        c.setContent("JUnit sample Comment");
 
         dao.addComment(c);
 

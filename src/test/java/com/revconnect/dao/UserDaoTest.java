@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.revconnect.core.User;
-import com.revconnect.core.UserType;
+import com.revconnect.model.User;
+import com.revconnect.model.UserType;
 
 public class UserDaoTest {
 

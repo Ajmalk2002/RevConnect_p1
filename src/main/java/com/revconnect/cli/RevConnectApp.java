@@ -5,27 +5,29 @@ import java.util.Scanner;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
-import com.revconnect.core.Comment;
-import com.revconnect.core.Notification;
-import com.revconnect.core.Post;
-import com.revconnect.core.User;
 import com.revconnect.dao.*;
+import com.revconnect.model.Comment;
+import com.revconnect.model.Notification;
+import com.revconnect.model.Post;
+import com.revconnect.model.User;
 import com.revconnect.service.AuthService;
 import com.revconnect.service.ProfileService;
 import com.revconnect.service.NotificationService;
 import static com.revconnect.util.InputUtil.readInt;
 import static com.revconnect.util.InputUtil.readNonEmpty;
 
-
 public class RevConnectApp {
 
 	private static final Logger log = Logger.getLogger(RevConnectApp.class);
+	private static final Logger inputLogger = Logger
+			.getLogger("INPUT_VALIDATION");
 	private static PostDaoImpl postDao = new PostDaoImpl();
 	private static LikeDaoImpl likeDao = new LikeDaoImpl();
 	private static CommentDaoImpl commentDao = new CommentDaoImpl();
 	private static ShareDaoImpl shareDao = new ShareDaoImpl();
 	private static ConnectionDaoImpl connectionDao = new ConnectionDaoImpl();
 	private static FeedDaoImpl feedDao = new FeedDaoImpl();
+	private static FollowDaoImpl followDao = new FollowDaoImpl();
 	private static NotificationService notificationService = new NotificationService();
 
 	public static void main(String[] args) {
@@ -144,6 +146,7 @@ public class RevConnectApp {
 		sc.close();
 	}
 
+	// profile management
 	private static void profileMenu(Scanner sc, User user,
 			ProfileService profileService) {
 
@@ -236,6 +239,7 @@ public class RevConnectApp {
 		}
 	}
 
+	// post management
 	private static void postMenu(Scanner sc, User user) {
 
 		while (true) {
@@ -349,6 +353,7 @@ public class RevConnectApp {
 		}
 	}
 
+	// social interaction management
 	private static void socialMenu(Scanner sc, User user) {
 
 		while (true) {
@@ -480,17 +485,22 @@ public class RevConnectApp {
 		}
 	}
 
+	// network management
 	private static void networkMenu(Scanner sc, User user) {
 
 		while (true) {
 
 			System.out.println("\n=== Network ===");
-			System.out.println("1. Send Request");
+			System.out.println("1. Send Connection Request");
 			System.out.println("2. View Pending Requests");
 			System.out.println("3. View My Connections");
 			System.out.println("4. Accept Request");
 			System.out.println("5. Reject Request");
-			System.out.println("6. Back");
+			System.out.println("6. Follow User");
+			System.out.println("7. Unfollow User");
+			System.out.println("8. View Followers");
+			System.out.println("9. View Following");
+			System.out.println("10. Back");
 			System.out.print("Enter choice: ");
 
 			int choice = readInt(sc);
@@ -510,16 +520,13 @@ public class RevConnectApp {
 				if (sent) {
 					notificationService
 							.notify(target, "New connection request");
-
-					log.info("Connection request sent successfully. fromUser="
-							+ user.getUserId() + ", toUser=" + target);
-
-					System.out.println("📨 Request sent successfully");
+					log.info("Connection request sent from userId="
+							+ user.getUserId() + " to userId=" + target);
+					System.out.println("📨 Request sent");
 				} else {
-					log.warn("Failed to send connection request. fromUser="
+					log.warn("Connection request already exists. fromUser="
 							+ user.getUserId() + ", toUser=" + target);
-
-					System.out.println("❌ Unable to send request");
+					System.out.println("❌ Request already exists");
 				}
 				break;
 			}
@@ -532,17 +539,10 @@ public class RevConnectApp {
 						.getUserId());
 
 				if (pending.isEmpty()) {
-					log.info("No pending connection requests for userId="
-							+ user.getUserId());
-
 					System.out.println("ℹ No pending requests");
 				} else {
-					log.info("Found " + pending.size()
-							+ " pending requests for userId="
-							+ user.getUserId());
-
 					System.out.println("=== Pending Requests ===");
-					for (String p : pending) {
+					for (String p : pending) { // ✅ Java 7 loop
 						System.out.println(p);
 					}
 				}
@@ -557,17 +557,11 @@ public class RevConnectApp {
 						.getUserId());
 
 				if (connections.isEmpty()) {
-					log.info("User has no connections. userId="
-							+ user.getUserId());
-
-					System.out.println("ℹ No connections yet");
+					System.out.println("ℹ No connections");
 				} else {
-					log.info("User has " + connections.size()
-							+ " connections. userId=" + user.getUserId());
-
 					System.out.println("=== My Connections ===");
-					for (Integer id : connections) {
-						System.out.println("Connected User ID: " + id);
+					for (Integer id : connections) { // ✅ Java 7 loop
+						System.out.println("User ID: " + id);
 					}
 				}
 				break;
@@ -580,21 +574,11 @@ public class RevConnectApp {
 				System.out.print("Enter Requester ID: ");
 				int req = readInt(sc);
 
-				boolean accepted = connectionDao.acceptRequest(req,
-						user.getUserId());
-
-				if (accepted) {
-					notificationService.notify(req,
-							"Your connection request was accepted");
-
-					log.info("Connection request accepted. fromUser=" + req
-							+ ", toUser=" + user.getUserId());
-
+				if (connectionDao.acceptRequest(req, user.getUserId())) {
+					notificationService
+							.notify(req, "Your request was accepted");
 					System.out.println("✅ Connection accepted");
 				} else {
-					log.warn("Failed to accept connection request. fromUser="
-							+ req + ", toUser=" + user.getUserId());
-
 					System.out.println("❌ Unable to accept request");
 				}
 				break;
@@ -607,36 +591,94 @@ public class RevConnectApp {
 				System.out.print("Enter Requester ID: ");
 				int rid = readInt(sc);
 
-				boolean rejected = connectionDao.rejectRequest(rid,
-						user.getUserId());
-
-				if (rejected) {
-					log.warn("Connection request rejected. fromUser=" + rid
-							+ ", toUser=" + user.getUserId());
-
+				if (connectionDao.rejectRequest(rid, user.getUserId())) {
 					System.out.println("❌ Connection rejected");
 				} else {
-					log.warn("No connection request found to reject. fromUser="
-							+ rid + ", toUser=" + user.getUserId());
-
-					System.out.println("⚠ No such request found");
+					System.out.println("⚠ No such request");
 				}
 				break;
 			}
 
-			case 6:
+			case 6: {
+				log.info("Follow User selected by userId=" + user.getUserId());
+
+				System.out.print("Enter User ID to follow: ");
+				int followee = readInt(sc);
+
+				boolean followed = followDao.follow(user.getUserId(), followee);
+
+				if (followed) {
+					notificationService.notify(followee,
+							"You have a new follower");
+					System.out.println("✅ Followed successfully");
+				} else {
+					System.out.println("⚠ Already following or invalid");
+				}
+				break;
+			}
+
+			case 7: {
+				log.info("Unfollow User selected by userId=" + user.getUserId());
+
+				System.out.print("Enter User ID to unfollow: ");
+				int followee = readInt(sc);
+
+				if (followDao.unfollow(user.getUserId(), followee)) {
+					System.out.println("✅ Unfollowed successfully");
+				} else {
+					System.out.println("⚠ You are not following this user");
+				}
+				break;
+			}
+
+			case 8: {
+				log.info("View Followers selected by userId="
+						+ user.getUserId());
+
+				List<Integer> followers = followDao.getFollowers(user
+						.getUserId());
+
+				if (followers.isEmpty()) {
+					System.out.println("ℹ No followers");
+				} else {
+					System.out.println("=== Followers ===");
+					for (Integer id : followers) { // ✅ Java 7 loop
+						System.out.println("User ID: " + id);
+					}
+				}
+				break;
+			}
+
+			case 9: {
+				log.info("View Following selected by userId="
+						+ user.getUserId());
+
+				List<Integer> following = followDao.getFollowing(user
+						.getUserId());
+
+				if (following.isEmpty()) {
+					System.out.println("ℹ Not following anyone");
+				} else {
+					System.out.println("=== Following ===");
+					for (Integer id : following) { // ✅ Java 7 loop
+						System.out.println("User ID: " + id);
+					}
+				}
+				break;
+			}
+
+			case 10:
 				log.info("Exiting Network menu for userId=" + user.getUserId());
 				return;
 
 			default:
-				log.error("Invalid network menu option selected: " + choice
-						+ ", userId=" + user.getUserId());
+				log.error("Invalid Network menu option selected: " + choice);
 				System.out.println("❌ Invalid option");
 			}
-
 		}
 	}
 
+	// feed management
 	private static void feedMenu(Scanner sc, User user) {
 
 		while (true) {
@@ -748,6 +790,7 @@ public class RevConnectApp {
 		}
 	}
 
+	// notification management
 	private static void notificationMenu(Scanner sc, User user) {
 
 		while (true) {

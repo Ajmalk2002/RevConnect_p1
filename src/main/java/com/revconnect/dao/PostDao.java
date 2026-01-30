@@ -1,11 +1,15 @@
 package com.revconnect.dao;
 
 import java.util.List;
-import com.revconnect.core.Post;
+
+import com.revconnect.model.Post;
 
 public interface PostDao {
-    void createPost(Post post);
-    List<Post> getMyPosts(int userId);
-    void updatePost(Post post);
-    void deletePost(int postId, int userId);
+	void createPost(Post post);
+
+	List<Post> getMyPosts(int userId);
+
+	void updatePost(Post post);
+
+	void deletePost(int postId, int userId);
 }

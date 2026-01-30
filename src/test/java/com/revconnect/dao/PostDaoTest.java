@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.revconnect.core.Post;
+import com.revconnect.model.Post;
 
 public class PostDaoTest {
 

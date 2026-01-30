@@ -7,168 +7,216 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.revconnect.config.DBConnection;
-import com.revconnect.core.Notification;
+import com.revconnect.model.Notification;
 
 public class NotificationDaoImpl implements NotificationDao {
 
-    @Override
-    public void addNotification(int userId, String message) {
+	// add notification
+	@Override
+	public void addNotification(int userId, String message) {
 
-        Connection con = null;
-        PreparedStatement ps = null;
+		Connection con = null;
+		PreparedStatement ps = null;
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(
-                "INSERT INTO notifications " +
-                "(notification_id, user_id, message, is_read, created_at) " +
-                "VALUES (notification_seq.NEXTVAL, ?, ?, 'N', SYSDATE)"
-            );
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement("INSERT INTO notifications "
+					+ "(notification_id, user_id, message, is_read, created_at) "
+					+ "VALUES (notification_seq.NEXTVAL, ?, ?, 'N', SYSDATE)");
 
-            ps.setInt(1, userId);
-            ps.setString(2, message);
-            ps.executeUpdate();
+			ps.setInt(1, userId);
+			ps.setString(2, message);
+			ps.executeUpdate();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+	}
 
-    @Override
-    public List<Notification> getUnreadNotifications(int userId) {
+	// get all notifications unread
+	@Override
+	public List<Notification> getUnreadNotifications(int userId) {
 
-        List<Notification> list = new ArrayList<Notification>();
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+		List<Notification> list = new ArrayList<Notification>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(
-                "SELECT * FROM notifications " +
-                "WHERE user_id=? AND is_read='N' " +
-                "ORDER BY created_at DESC"
-            );
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement("SELECT * FROM notifications "
+					+ "WHERE user_id=? AND is_read='N' "
+					+ "ORDER BY created_at DESC");
 
-            ps.setInt(1, userId);
-            rs = ps.executeQuery();
+			ps.setInt(1, userId);
+			rs = ps.executeQuery();
 
-            while (rs.next()) {
-                Notification n = new Notification();
-                n.setNotificationId(rs.getInt("NOTIFICATION_ID"));
-                n.setUserId(rs.getInt("USER_ID"));
-                n.setMessage(rs.getString("MESSAGE"));
-                n.setRead(false);
-                n.setCreatedAt(rs.getDate("CREATED_AT"));
-                list.add(n);
-            }
+			while (rs.next()) {
+				Notification n = new Notification();
+				n.setNotificationId(rs.getInt("NOTIFICATION_ID"));
+				n.setUserId(rs.getInt("USER_ID"));
+				n.setMessage(rs.getString("MESSAGE"));
+				n.setRead(false);
+				n.setCreatedAt(rs.getDate("CREATED_AT"));
+				list.add(n);
+			}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
 
-        return list;
-    }
+		return list;
+	}
 
-    @Override
-    public List<Notification> getAllNotifications(int userId) {
+	// to see all the notification
+	@Override
+	public List<Notification> getAllNotifications(int userId) {
 
-        List<Notification> list = new ArrayList<Notification>();
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+		List<Notification> list = new ArrayList<Notification>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(
-                "SELECT * FROM notifications " +
-                "WHERE user_id=? ORDER BY created_at DESC"
-            );
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement("SELECT * FROM notifications "
+					+ "WHERE user_id=? ORDER BY created_at DESC");
 
-            ps.setInt(1, userId);
-            rs = ps.executeQuery();
+			ps.setInt(1, userId);
+			rs = ps.executeQuery();
 
-            while (rs.next()) {
-                Notification n = new Notification();
-                n.setNotificationId(rs.getInt("NOTIFICATION_ID"));
-                n.setUserId(rs.getInt("USER_ID"));
-                n.setMessage(rs.getString("MESSAGE"));
-                n.setRead("Y".equals(rs.getString("IS_READ")));
-                n.setCreatedAt(rs.getDate("CREATED_AT"));
-                list.add(n);
-            }
+			while (rs.next()) {
+				Notification n = new Notification();
+				n.setNotificationId(rs.getInt("NOTIFICATION_ID"));
+				n.setUserId(rs.getInt("USER_ID"));
+				n.setMessage(rs.getString("MESSAGE"));
+				n.setRead("Y".equals(rs.getString("IS_READ")));
+				n.setCreatedAt(rs.getDate("CREATED_AT"));
+				list.add(n);
+			}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
 
-        return list;
-    }
+		return list;
+	}
 
-    @Override
-    public int getUnreadCount(int userId) {
+	// to get unread count
 
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+	@Override
+	public int getUnreadCount(int userId) {
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(
-                "SELECT COUNT(*) FROM notifications " +
-                "WHERE user_id=? AND is_read='N'"
-            );
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-            ps.setInt(1, userId);
-            rs = ps.executeQuery();
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement("SELECT COUNT(*) FROM notifications "
+					+ "WHERE user_id=? AND is_read='N'");
 
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
+			ps.setInt(1, userId);
+			rs = ps.executeQuery();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
+			if (rs.next()) {
+				return rs.getInt(1);
+			}
 
-        return 0;
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
 
-    @Override
-    public void markAsRead(int notificationId) {
+		return 0;
+	}
 
-        Connection con = null;
-        PreparedStatement ps = null;
+	// to marking as read
+	@Override
+	public void markAsRead(int notificationId) {
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(
-                "UPDATE notifications SET is_read='Y' " +
-                "WHERE notification_id=?"
-            );
+		Connection con = null;
+		PreparedStatement ps = null;
 
-            ps.setInt(1, notificationId);
-            ps.executeUpdate();
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement("UPDATE notifications SET is_read='Y' "
+					+ "WHERE notification_id=?");
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
-    }
+			ps.setInt(1, notificationId);
+			ps.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+	}
 }

@@ -1,7 +1,9 @@
-
 package com.revconnect.dao;
-import com.revconnect.core.Profile;
+
+import com.revconnect.model.Profile;
+
 public interface ProfileDao {
- void saveOrUpdate(Profile profile);
- void viewProfile(int userId);
+	void saveOrUpdate(Profile profile);
+
+	void viewProfile(int userId);
 }

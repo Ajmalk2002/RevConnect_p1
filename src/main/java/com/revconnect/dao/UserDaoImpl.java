@@ -3,208 +3,239 @@ package com.revconnect.dao;
 import java.sql.*;
 
 import com.revconnect.config.DBConnection;
-import com.revconnect.core.User;
+import com.revconnect.model.User;
 import com.revconnect.util.PasswordUtil;
 
 public class UserDaoImpl implements UserDao {
+	
+	// for registration
 
-    public int register(User u) {
+	public int register(User user) {
 
-        Connection con = null;
-        CallableStatement cs = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+		Connection con = null;
+		CallableStatement cs = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-        try {
-            con = DBConnection.getConnection();
+		try {
+			con = DBConnection.getConnection();
 
-            String hashedPassword =
-                PasswordUtil.hashPassword(u.getPassword());
+			String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
 
-            cs = con.prepareCall("{ call sp_register_user(?, ?, ?) }");
-            cs.setString(1, u.getEmail());
-            cs.setString(2, hashedPassword);
-            cs.setString(3, u.getUserType().name()); 
-            cs.execute();
-            cs.close();
+			cs = con.prepareCall("{ call sp_register_user(?, ?, ?) }");
+			cs.setString(1, user.getEmail());
+			cs.setString(2, hashedPassword);
+			cs.setString(3, user.getUserType().name());
+			cs.execute();
+			cs.close();
 
-            ps = con.prepareStatement(
-                "SELECT user_id FROM users WHERE email=?"
-            );
-            ps.setString(1, u.getEmail());
-            rs = ps.executeQuery();
+			ps = con.prepareStatement("SELECT user_id FROM users WHERE email=?");
+			ps.setString(1, user.getEmail());
+			rs = ps.executeQuery();
 
-            if (rs.next()) {
-                u.setUserId(rs.getInt("USER_ID"));
-                return 1;
-            }
+			if (rs.next()) {
+				user.setUserId(rs.getInt("USER_ID"));
+				return 1;
+			}
 
-        } catch (Exception e) {
-            System.out.println("❌ Registration failed");
-            e.printStackTrace();
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (cs != null) cs.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
-        return 0;
-    }
+		} catch (SQLException e) {
 
-    public User login(String email, String password) {
+			if (e.getErrorCode() == 1) {
+				return 0;
+			}
 
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+			if (e.getMessage() != null
+					&& e.getMessage().toLowerCase().contains("email")) {
+				return 0;
+			}
 
-        try {
-            con = DBConnection.getConnection();
+			return 0;
 
-            String hashedPassword =
-                PasswordUtil.hashPassword(password);
+		} catch (Exception e) {
+			return 0;
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (cs != null)
+					cs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
 
-            ps = con.prepareStatement(
-                "SELECT user_id, email, user_type FROM users " +
-                "WHERE email=? AND password=?"
-            );
-            ps.setString(1, email);
-            ps.setString(2, hashedPassword);
+		return 0;
+	}
+	
+	// for login
 
-            rs = ps.executeQuery();
+	public User login(String email, String password) {
 
-            if (rs.next()) {
-                User u = new User();
-                u.setUserId(rs.getInt("USER_ID"));
-                u.setEmail(rs.getString("EMAIL"));
-                u.setUserType(
-                    Enum.valueOf(
-                        com.revconnect.core.UserType.class,
-                        rs.getString("USER_TYPE")
-                    )
-                );
-                return u;
-            }
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-        } catch (Exception e) {
-            System.out.println("❌ Login error");
-            e.printStackTrace();
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
-        return null;
-    }
+		try {
+			con = DBConnection.getConnection();
 
-    public void searchUsers(String key) {
+			String hashedPassword = PasswordUtil.hashPassword(password);
 
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+			ps = con.prepareStatement("SELECT user_id, email, user_type FROM users "
+					+ "WHERE email=? AND password=?");
+			ps.setString(1, email);
+			ps.setString(2, hashedPassword);
 
-        try {
-            con = DBConnection.getConnection();
-            ps = con.prepareStatement(
-                "SELECT user_id, email, user_type FROM users " +
-                "WHERE LOWER(email) LIKE ?"
-            );
+			rs = ps.executeQuery();
 
-            ps.setString(1, "%" + key.toLowerCase() + "%");
-            rs = ps.executeQuery();
+			if (rs.next()) {
+				User u = new User();
+				u.setUserId(rs.getInt("USER_ID"));
+				u.setEmail(rs.getString("EMAIL"));
+				u.setUserType(Enum.valueOf(com.revconnect.model.UserType.class,
+						rs.getString("USER_TYPE")));
+				return u;
+			}
 
-            boolean found = false;
-            while (rs.next()) {
-                found = true;
-                System.out.println(
-                    "User ID: " + rs.getInt("USER_ID") +
-                    " | Email: " + rs.getString("EMAIL") +
-                    " | Type: " + rs.getString("USER_TYPE")
-                );
-            }
+		} catch (Exception e) {
+			System.out.println("❌ Login error");
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+		return null;
+	}
 
-            if (!found)
-                System.out.println("No users found.");
+	
+	// search by users
+	public void searchUsers(String key) {
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
-    }
-    
-    @Override
-    public boolean changePassword(int userId, String oldPassword, String newPassword) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+		try {
+			con = DBConnection.getConnection();
+			ps = con.prepareStatement("SELECT user_id, email, user_type FROM users "
+					+ "WHERE LOWER(email) LIKE ?");
 
-        try {
-            con = DBConnection.getConnection();
+			ps.setString(1, "%" + key.toLowerCase() + "%");
+			rs = ps.executeQuery();
 
-            ps = con.prepareStatement(
-                "SELECT password FROM users WHERE user_id=?");
-            ps.setInt(1, userId);
-            rs = ps.executeQuery();
+			boolean found = false;
+			while (rs.next()) {
+				found = true;
+				System.out.println("User ID: " + rs.getInt("USER_ID")
+						+ " | Email: " + rs.getString("EMAIL") + " | Type: "
+						+ rs.getString("USER_TYPE"));
+			}
 
-            if (!rs.next()) return false;
+			if (!found)
+				System.out.println("No users found.");
 
-            String dbHash = rs.getString("password");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+	}
 
-            String oldHash = PasswordUtil.hashPassword(oldPassword);
+	
+	// to change password
+	@Override
+	public boolean changePassword(int userId, String oldPassword,
+			String newPassword) {
 
-            if (!oldHash.equals(dbHash)) {
-                return false; 
-            }
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-            rs.close();
-            ps.close();
+		try {
+			con = DBConnection.getConnection();
 
-            ps = con.prepareStatement(
-                "UPDATE users SET password=? WHERE user_id=?");
-            ps.setString(1,
-                PasswordUtil.hashPassword(newPassword));
-            ps.setInt(2, userId);
+			ps = con.prepareStatement("SELECT password FROM users WHERE user_id=?");
+			ps.setInt(1, userId);
+			rs = ps.executeQuery();
 
-            return ps.executeUpdate() > 0;
+			if (!rs.next())
+				return false;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
-    }
+			String dbHash = rs.getString("password");
 
+			String oldHash = PasswordUtil.hashPassword(oldPassword);
 
-    @Override
-    public boolean resetPasswordByEmail(String email, String newPassword) {
+			if (!oldHash.equals(dbHash)) {
+				return false;
+			}
 
-        Connection con = null;
-        PreparedStatement ps = null;
+			rs.close();
+			ps.close();
 
-        try {
-            con = DBConnection.getConnection();
+			ps = con.prepareStatement("UPDATE users SET password=? WHERE user_id=?");
+			ps.setString(1, PasswordUtil.hashPassword(newPassword));
+			ps.setInt(2, userId);
 
-            ps = con.prepareStatement(
-                "UPDATE users SET password=? WHERE email=?");
-            ps.setString(1,
-                PasswordUtil.hashPassword(newPassword));
-            ps.setString(2, email);
+			return ps.executeUpdate() > 0;
 
-            return ps.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (con != null) con.close(); } catch (Exception e) {}
-        }
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (con != null)
+					con.close();
+			} catch (Exception e) {
+			}
+		}
+	}
 
 }

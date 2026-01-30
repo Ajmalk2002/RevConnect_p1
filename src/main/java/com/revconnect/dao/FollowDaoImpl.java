@@ -7,110 +7,144 @@ import com.revconnect.config.DBConnection;
 
 public class FollowDaoImpl implements FollowDao {
 
-    @Override
-    public boolean follow(int followerId, int followeeId) {
+	// to follow
+	@Override
+	public boolean follow(int followerId, int followeeId) {
 
-        if (followerId == followeeId) {
-            return false;
-        }
+		if (followerId == followeeId) {
+			return false;
+		}
 
-        Connection c = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+		Connection c = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-        try {
-            c = DBConnection.getConnection();
+		try {
+			c = DBConnection.getConnection();
 
-            ps = c.prepareStatement(
-                "SELECT 1 FROM followers WHERE follower_id=? AND followee_id=?");
-            ps.setInt(1, followerId);
-            ps.setInt(2, followeeId);
-            rs = ps.executeQuery();
+			ps = c.prepareStatement("SELECT 1 FROM followers WHERE follower_id=? AND followee_id=?");
+			ps.setInt(1, followerId);
+			ps.setInt(2, followeeId);
+			rs = ps.executeQuery();
 
-            if (rs.next()) {
-                return false; 
-            }
+			if (rs.next()) {
+				return false;
+			}
 
-            rs.close();
-            ps.close();
+			rs.close();
+			ps.close();
 
-            ps = c.prepareStatement(
-                "INSERT INTO followers (follower_id, followee_id) VALUES (?, ?)");
-            ps.setInt(1, followerId);
-            ps.setInt(2, followeeId);
+			ps = c.prepareStatement("INSERT INTO followers (follower_id, followee_id) VALUES (?, ?)");
+			ps.setInt(1, followerId);
+			ps.setInt(2, followeeId);
 
-            ps.executeUpdate();
-            return true;
+			ps.executeUpdate();
+			return true;
 
-        } catch (Exception e) {
-            return false;
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (c != null) c.close(); } catch (Exception e) {}
-        }
-    }
+		} catch (Exception e) {
+			return false;
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (c != null)
+					c.close();
+			} catch (Exception e) {
+			}
+		}
+	}
 
-    @Override
-    public boolean unfollow(int followerId, int followeeId) {
+	// to unfollow
 
-        Connection c = null;
-        PreparedStatement ps = null;
+	@Override
+	public boolean unfollow(int followerId, int followeeId) {
 
-        try {
-            c = DBConnection.getConnection();
-            ps = c.prepareStatement(
-                "DELETE FROM followers WHERE follower_id=? AND followee_id=?");
-            ps.setInt(1, followerId);
-            ps.setInt(2, followeeId);
+		Connection c = null;
+		PreparedStatement ps = null;
 
-            return ps.executeUpdate() > 0;
+		try {
+			c = DBConnection.getConnection();
+			ps = c.prepareStatement("DELETE FROM followers WHERE follower_id=? AND followee_id=?");
+			ps.setInt(1, followerId);
+			ps.setInt(2, followeeId);
 
-        } catch (Exception e) {
-            return false;
-        } finally {
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (c != null) c.close(); } catch (Exception e) {}
-        }
-    }
+			return ps.executeUpdate() > 0;
 
-    @Override
-    public List<Integer> getFollowers(int userId) {
-        return fetchList(
-            "SELECT follower_id FROM followers WHERE followee_id=?", userId);
-    }
+		} catch (Exception e) {
+			return false;
+		} finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (c != null)
+					c.close();
+			} catch (Exception e) {
+			}
+		}
+	}
 
-    @Override
-    public List<Integer> getFollowing(int userId) {
-        return fetchList(
-            "SELECT followee_id FROM followers WHERE follower_id=?", userId);
-    }
+	// to see followers
+	@Override
+	public List<Integer> getFollowers(int userId) {
+		return fetchList(
+				"SELECT follower_id FROM followers WHERE followee_id=?", userId);
+	}
 
-    private List<Integer> fetchList(String sql, int id) {
+	// to see following
+	@Override
+	public List<Integer> getFollowing(int userId) {
+		return fetchList(
+				"SELECT followee_id FROM followers WHERE follower_id=?", userId);
+	}
 
-        List<Integer> list = new ArrayList<Integer>();
-        Connection c = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+	private List<Integer> fetchList(String sql, int id) {
 
-        try {
-            c = DBConnection.getConnection();
-            ps = c.prepareStatement(sql);
-            ps.setInt(1, id);
-            rs = ps.executeQuery();
+		List<Integer> list = new ArrayList<Integer>();
+		Connection c = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
 
-            while (rs.next()) {
-                list.add(rs.getInt(1));
-            }
+		try {
+			c = DBConnection.getConnection();
+			ps = c.prepareStatement(sql);
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (ps != null) ps.close(); } catch (Exception e) {}
-            try { if (c != null) c.close(); } catch (Exception e) {}
-        }
+			while (rs.next()) {
+				list.add(rs.getInt(1));
+			}
 
-        return list;
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (Exception e) {
+			}
+			try {
+				if (c != null)
+					c.close();
+			} catch (Exception e) {
+			}
+		}
+
+		return list;
+	}
 }
