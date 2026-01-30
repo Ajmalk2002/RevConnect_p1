@@ -5,6 +5,8 @@ import com.revconnect.config.DBConnection;
 
 public class ShareDaoImpl implements ShareDao {
 
+	
+	// share post
 	public void sharePost(int userId, int postId) {
 		Connection con = null;
 		PreparedStatement ps = null;

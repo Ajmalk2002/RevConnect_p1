@@ -18,3 +18,53 @@
 2026-01-30 11:27:35 INFO  com.revconnect.cli.RevConnectApp - View profile requested for userId=3
 2026-01-30 11:27:38 INFO  com.revconnect.cli.RevConnectApp - User search triggered. keyword=ajmal, by userId=3
 2026-01-30 11:27:39 INFO  com.revconnect.cli.RevConnectApp - Exiting Profile Menu for userId=3
+2026-01-30 12:12:55 WARN  com.revconnect.cli.RevConnectApp - Reject Connection Request selected by userId=3
+2026-01-30 12:12:59 WARN  com.revconnect.cli.RevConnectApp - No connection request found to reject. fromUser=5, toUser=3
+2026-01-30 12:13:12 INFO  com.revconnect.cli.RevConnectApp - Exiting Network menu for userId=3
+2026-01-30 12:13:17 INFO  com.revconnect.cli.RevConnectApp - Exiting Feed & Discovery menu for userId=3
+2026-01-30 12:13:29 INFO  com.revconnect.cli.RevConnectApp - Exiting Social menu for userId=3
+2026-01-30 12:14:05 INFO  com.revconnect.cli.RevConnectApp - View My Connections selected by userId=3
+2026-01-30 12:14:05 INFO  com.revconnect.cli.RevConnectApp - User has 2 connections. userId=3
+2026-01-30 12:23:58 INFO  com.revconnect.cli.RevConnectApp - RevConnect application started
+2026-01-30 12:24:11 INFO  com.revconnect.cli.RevConnectApp - User logged in: ajmal@mail.com
+2026-01-30 12:24:17 INFO  com.revconnect.cli.RevConnectApp - Follow User selected by userId=3
+2026-01-30 12:24:42 INFO  com.revconnect.cli.RevConnectApp - View Followers selected by userId=3
+2026-01-30 12:24:47 INFO  com.revconnect.cli.RevConnectApp - View Following selected by userId=3
+2026-01-30 13:03:50 INFO  com.revconnect.cli.RevConnectApp - Exiting Network menu for userId=3
+2026-01-30 13:04:11 INFO  com.revconnect.cli.RevConnectApp - User logged in: aadhi6
+2026-01-30 13:04:20 INFO  com.revconnect.cli.RevConnectApp - View ALL notifications selected by userId=13
+2026-01-30 13:04:21 INFO  com.revconnect.cli.RevConnectApp - Total notifications count=7 for userId=13
+2026-01-30 13:04:31 INFO  com.revconnect.cli.RevConnectApp - Mark notification as READ selected by userId=13
+2026-01-30 13:04:47 INFO  com.revconnect.cli.RevConnectApp - Notification marked as READ. notificationId=3, userId=13
+2026-01-30 13:04:56 INFO  com.revconnect.cli.RevConnectApp - View UNREAD notifications selected by userId=13
+2026-01-30 13:04:56 INFO  com.revconnect.cli.RevConnectApp - Unread notifications count=5 for userId=13
+2026-01-30 14:43:53 INFO  com.revconnect.cli.RevConnectApp - RevConnect application started
+2026-01-30 14:47:49 INFO  com.revconnect.cli.RevConnectApp - RevConnect application started
+2026-01-30 14:48:13 INFO  com.revconnect.cli.RevConnectApp - User logged in: aadhi6
+2026-01-30 14:48:25 INFO  com.revconnect.cli.RevConnectApp - View Trending Posts selected by userId=13
+2026-01-30 14:48:25 INFO  com.revconnect.cli.RevConnectApp - Loaded 9 trending posts
+2026-01-30 14:48:33 INFO  com.revconnect.cli.RevConnectApp - View Personalized Feed selected by userId=13
+2026-01-30 14:48:33 INFO  com.revconnect.cli.RevConnectApp - Loaded 3 feed posts for userId=13
+2026-01-30 14:48:41 INFO  com.revconnect.cli.RevConnectApp - Exiting Feed & Discovery menu for userId=13
+2026-01-30 14:48:50 INFO  com.revconnect.cli.RevConnectApp - View My Connections selected by userId=13
+2026-01-30 14:49:54 INFO  com.revconnect.cli.RevConnectApp - Exiting Network menu for userId=13
+2026-01-30 15:09:59 INFO  com.revconnect.cli.RevConnectApp - RevConnect application started
+2026-01-30 15:10:18 INFO  com.revconnect.cli.RevConnectApp - User logged in: ajmal@mail.com
+2026-01-30 15:10:20 INFO  com.revconnect.cli.RevConnectApp - Entered Profile Menu | userId=3 | userType=PERSONAL
+2026-01-30 15:10:23 INFO  com.revconnect.cli.RevConnectApp - View Profile requested | userId=3
+2026-01-30 15:10:30 INFO  com.revconnect.cli.RevConnectApp - Exiting Profile Menu | userId=3
+2026-01-30 15:10:49 WARN  com.revconnect.cli.RevConnectApp - Registration failed
+2026-01-30 15:11:07 WARN  com.revconnect.cli.RevConnectApp - Registration failed
+2026-01-30 15:11:54 WARN  com.revconnect.cli.RevConnectApp - Registration failed
+2026-01-30 15:39:49 INFO  com.revconnect.cli.RevConnectApp - RevConnect application started
+2026-01-30 15:39:58 INFO  com.revconnect.cli.RevConnectApp - Forgot Password option selected
+2026-01-30 15:40:03 WARN  com.revconnect.cli.RevConnectApp - Password reset failed
+2026-01-30 15:40:16 INFO  com.revconnect.cli.RevConnectApp - Forgot Password option selected
+2026-01-30 15:40:20 WARN  com.revconnect.cli.RevConnectApp - Password reset failed
+2026-01-30 15:41:51 INFO  com.revconnect.cli.RevConnectApp - RevConnect application started
+2026-01-30 15:42:15 INFO  com.revconnect.cli.RevConnectApp - User registered: newuser
+2026-01-30 15:42:25 INFO  com.revconnect.cli.RevConnectApp - Forgot Password option selected
+2026-01-30 15:42:40 INFO  com.revconnect.cli.RevConnectApp - Password reset successful
+2026-01-30 15:42:56 INFO  com.revconnect.cli.RevConnectApp - User logged in: newuser
+2026-01-30 15:43:41 INFO  com.revconnect.cli.RevConnectApp - Forgot Password option selected
+2026-01-30 15:44:14 WARN  com.revconnect.cli.RevConnectApp - Password reset failed

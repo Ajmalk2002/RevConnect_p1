@@ -44,6 +44,7 @@ public class RevConnectApp {
 			System.out.println("\n==== RevConnect ====");
 			System.out.println("1. Register");
 			System.out.println("2. Login");
+			System.out.println("3. Forgot Password");
 			System.out.println("0. Exit");
 			System.out.print("Enter choice: ");
 
@@ -72,6 +73,21 @@ public class RevConnectApp {
 				}
 				log.info("User logged in: " + user.getEmail());
 				break;
+
+			case 3:
+				log.info("Forgot Password option selected");
+
+				boolean reset = authService.forgotPassword(sc);
+
+				if (reset) {
+					log.info("Password reset successful");
+					System.out
+							.println("✅ Password reset successful. Please login.");
+				} else {
+					log.warn("Password reset failed");
+					System.out.println("❌ Password reset failed");
+				}
+				continue;
 
 			default:
 				continue;
@@ -150,92 +166,111 @@ public class RevConnectApp {
 	private static void profileMenu(Scanner sc, User user,
 			ProfileService profileService) {
 
+		log.info("Entered Profile Menu | userId=" + user.getUserId()
+				+ " | userType=" + user.getUserType());
+
 		UserDaoImpl userDao = new UserDaoImpl();
 
 		while (true) {
 
-			System.out.println("\n=== Profile Menu ===");
-			System.out.println("1. Create / Edit Profile");
-			System.out.println("2. View My Profile");
-			System.out.println("3. Search User");
-			System.out.println("4. Change Password");
-			System.out.println("5. Back");
-			System.out.print("Enter choice: ");
+			try {
 
-			int opt = readInt(sc);
+				System.out.println("\n=== Profile Menu ===");
+				System.out.println("1. Create / Edit Profile");
+				System.out.println("2. View My Profile");
+				System.out.println("3. Search User");
+				System.out.println("4. Change Password");
+				System.out.println("5. Back");
+				System.out.print("Enter choice: ");
 
-			switch (opt) {
+				int opt = readInt(sc);
 
-			case 1: {
-				log.info("Profile create/edit selected by userId="
-						+ user.getUserId());
+				log.debug("Profile menu option selected: opt=" + opt
+						+ " | userId=" + user.getUserId());
 
-				boolean success = profileService.createOrEditProfile(
-						user.getUserId(), user.getUserType(), sc);
+				switch (opt) {
 
-				if (success) {
-					log.info("Profile saved successfully for userId="
+				case 1: {
+					log.info("Create/Edit Profile initiated | userId="
 							+ user.getUserId());
-					System.out.println("✅ Profile saved");
-				} else {
-					log.warn("Profile save failed for userId="
-							+ user.getUserId());
-					System.out.println("❌ Profile save failed");
+
+					boolean success = profileService.createOrEditProfile(
+							user.getUserId(), user.getUserType(), sc);
+
+					if (success) {
+						log.info("Profile saved successfully | userId="
+								+ user.getUserId());
+						System.out.println("✅ Profile saved");
+					} else {
+						log.warn("Profile save failed | userId="
+								+ user.getUserId());
+						System.out.println("❌ Profile save failed");
+					}
+					break;
 				}
-				break;
-			}
 
-			case 2:
-				log.info("View profile requested for userId="
-						+ user.getUserId());
-				profileService.viewProfile(user.getUserId());
-				break;
-
-			case 3:
-				System.out.print("Enter name or email: ");
-				String keyword = sc.nextLine();
-
-				log.info("User search triggered. keyword=" + keyword
-						+ ", by userId=" + user.getUserId());
-
-				userDao.searchUsers(keyword);
-				break;
-
-			case 4: {
-				log.info("Change password initiated for userId="
-						+ user.getUserId());
-
-				System.out.print("Enter old password: ");
-				String oldPass = sc.nextLine();
-
-				System.out.print("Enter new password: ");
-				String newPass = sc.nextLine();
-
-				boolean changed = userDao.changePassword(user.getUserId(),
-						oldPass, newPass);
-
-				if (changed) {
-					log.info("Password changed successfully for userId="
+				case 2:
+					log.info("View Profile requested | userId="
 							+ user.getUserId());
-					System.out.println("✅ Password changed successfully");
-				} else {
-					log.warn("Password change failed (wrong old password) for userId="
+
+					profileService.viewProfile(user.getUserId());
+					break;
+
+				case 3:
+					System.out.print("Enter name or email: ");
+					String keyword = sc.nextLine().trim();
+
+					log.info("User search initiated | keyword=" + keyword
+							+ " | by userId=" + user.getUserId());
+
+					userDao.searchUsers(keyword);
+					break;
+
+				case 4: {
+					log.info("Change Password initiated | userId="
 							+ user.getUserId());
-					System.out.println("❌ Old password incorrect");
+
+					System.out.print("Enter old password: ");
+					String oldPass = sc.nextLine();
+
+					System.out.print("Enter new password: ");
+					String newPass = sc.nextLine();
+
+					boolean changed = userDao.changePassword(user.getUserId(),
+							oldPass, newPass);
+
+					if (changed) {
+						log.info("Password changed successfully | userId="
+								+ user.getUserId());
+						System.out.println("✅ Password changed successfully");
+					} else {
+						log.warn("Password change failed (wrong old password) | userId="
+								+ user.getUserId());
+						System.out.println("❌ Old password incorrect");
+					}
+					break;
 				}
-				break;
+
+				case 5:
+					log.info("Exiting Profile Menu | userId="
+							+ user.getUserId());
+					return;
+
+				default:
+					log.warn("Invalid Profile Menu option | opt=" + opt
+							+ " | userId=" + user.getUserId());
+					System.out.println("❌ Invalid option");
+				}
+
+			} catch (Exception e) {
+
+				log.error(
+						"Exception occurred in Profile Menu | userId="
+								+ user.getUserId(), e);
+
+				System.out
+						.println("❌ An unexpected error occurred. Please try again.");
 			}
-
-			case 5:
-				log.info("Exiting Profile Menu for userId=" + user.getUserId());
-				return;
-
-			default:
-				log.warn("Invalid profile menu option selected: opt=" + opt
-						+ ", userId=" + user.getUserId());
-				System.out.println("❌ Invalid option");
-			}
-
 		}
 	}
 

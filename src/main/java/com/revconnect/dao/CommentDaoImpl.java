@@ -6,7 +6,7 @@ import com.revconnect.config.DBConnection;
 import com.revconnect.model.Comment;
 
 public class CommentDaoImpl implements CommentDao {
-	
+
 	// for adding comment
 
 	public void addComment(Comment comment) {
@@ -77,8 +77,7 @@ public class CommentDaoImpl implements CommentDao {
 		return list;
 	}
 
-	
-	//for deleting comment
+	// for deleting comment
 	public void deleteComment(int commentId, int userId) {
 		Connection con = null;
 		PreparedStatement ps = null;

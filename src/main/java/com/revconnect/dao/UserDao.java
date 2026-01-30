@@ -3,12 +3,16 @@ package com.revconnect.dao;
 import com.revconnect.model.User;
 
 public interface UserDao {
-	int register(User user);
+    int register(User user);
 
-	User login(String email, String password);
+    User login(String email, String password);
 
-	void searchUsers(String key);
+    void searchUsers(String key);
 
-	boolean changePassword(int userId, String oldPassword, String newPassword);
+    boolean changePassword(int userId, String oldPassword, String newPassword);
+
+    String getSecurityQuestion(String email);
+    
+    boolean resetPassword(String email, String securityAnswer, String newPassword);
 
 }

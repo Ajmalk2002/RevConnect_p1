@@ -9,8 +9,8 @@ import java.util.List;
 import com.revconnect.config.DBConnection;
 
 public class ConnectionDaoImpl implements ConnectionDao {
-	
-	//send connection request
+
+	// send connection request
 
 	@Override
 	public boolean sendRequest(int fromUser, int toUser) {
@@ -84,7 +84,7 @@ public class ConnectionDaoImpl implements ConnectionDao {
 			}
 		}
 	}
-	
+
 	// request accepting
 
 	@Override
@@ -117,7 +117,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
 		}
 	}
 
-	
 	// reject request
 	@Override
 	public boolean rejectRequest(int fromUser, int toUser) {
@@ -149,7 +148,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
 		}
 	}
 
-	
 	// remove connections
 	@Override
 	public boolean removeConnection(int userId, int otherUser) {
@@ -184,7 +182,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
 		}
 	}
 
-	
 	// to see pending requests
 	@Override
 	public List<String> getPendingRequests(int userId) {
@@ -228,8 +225,7 @@ public class ConnectionDaoImpl implements ConnectionDao {
 		return list;
 	}
 
-	
-	//for  connections
+	// for connections
 	@Override
 	public List<Integer> getConnections(int userId) {
 
@@ -274,7 +270,6 @@ public class ConnectionDaoImpl implements ConnectionDao {
 		return list;
 	}
 
-	
 	// to see all connections
 	@Override
 	public List<String> getAllConnections(int userId) {
